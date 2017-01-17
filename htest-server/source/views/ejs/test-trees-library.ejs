@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<% include sbadmin/header %>
+
+<body>
+  <div id="wrapper">
+
+    <% include sbadmin/navigation_bars %>
+
+    <div id="page-wrapper">
+
+        <div class="container-fluid">
+
+          <!-- Page Heading -->
+          <div class="row">
+            <div class="col-lg-12">
+              <h1 class="page-header">
+                <%= pageTitle %>
+              </h1>
+            </div>
+          </div>
+          <!-- /.row -->
+
+      </div>
+      <!-- /.container-fluid -->
+
+    </div>
+    <!-- /#page-wrapper -->
+
+  </div>
+  <!-- /#wrapper -->
+
+  <!-- jQuery -->
+  <script src="js/jquery.js"></script>
+
+  <!-- Bootstrap Core JavaScript -->
+  <script src="js/bootstrap.min.js"></script>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io(window.location.host);
+
+    socket.on('connect', () => {
+      console.log('connect event received');
+      socket.emit('<%= pagePath %>');
+    });
+    socket.on('disconnect', () => {
+      console.log('disconnect event received');
+    });
+  </script>
+
+</body>
