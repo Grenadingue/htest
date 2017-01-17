@@ -12,5 +12,8 @@
     "url": "svn+ssh://svn@substantielsvn.dyndns.org/ordissimo/sub/ordissimo/htest-server"
   },
   "author": "Nicolas Chauvin",
-  "license": "None"
+  "license": "None",
+  "dependencies": {
+    "express": "^4.14.0"
+  }
 }
