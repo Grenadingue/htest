@@ -31,6 +31,19 @@
 
 <body>
 
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io('http://localhost:8080');
+
+      socket.on('connect', () => {
+        console.log('connect event received');
+        socket.emit('testTreesLibrary');
+      });
+      socket.on('disconnect', () => {
+        console.log('disconnect event received');
+      });
+    </script>
+
     <div id="wrapper">
 
         <!-- Navigation -->
