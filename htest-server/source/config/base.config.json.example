@@ -1,0 +1,15 @@
+{
+  "webServer": {
+    "port": 8080
+  },
+  "dataBase": {
+    "database": "htest",
+    "username": "root",
+    "password": "foo",
+    "options": {
+      "host": "localhost",
+      "dialect": "mysql",
+      "logging": false
+    }
+  }
+}

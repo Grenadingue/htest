@@ -5,3 +5,6 @@ npm-debug.log
 # emacs
 *~
 .*~
+
+# configuration files
+config/*.json
