@@ -8,3 +8,6 @@ npm-debug.log
 
 # configuration files
 config/*.json
+
+# autoenv (github.com/kennethreitz/autoenv)
+.env*
