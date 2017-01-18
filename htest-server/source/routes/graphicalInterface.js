@@ -12,7 +12,7 @@ function declarePage(app, httpPath, serverPath, title) {
   app.get(httpPath, (req, res) => {
     const parameters = {
       pageTitle: title,
-      windowTitle: 'htest - ' + title ,
+      windowTitle: `htest - ${title}`,
       pagePath: httpPath,
     };
     ejs.renderFile(path.resolve(__dirname, serverPath), parameters, (err, html) => {
@@ -25,7 +25,7 @@ function declarePage(app, httpPath, serverPath, title) {
   });
 }
 
-module.exports.initHttpRoutes = function (express, app) {
+module.exports.initHttpRoutes = (express, app) => {
   app.use(express.static(path.resolve(__dirname, '../views/static')));
   app.get('/', (req, res) => {
     res.redirect(routes.dashboard);
@@ -37,24 +37,29 @@ module.exports.initHttpRoutes = function (express, app) {
   declarePage(app, routes.machinesTests, '../views/ejs/machines-tests.ejs', 'Machines tests');
 };
 
-module.exports.initSocketIoEvents = function (socket) {
+module.exports.initSocketIoEvents = (socket) => {
   socket.on(routes.dashboard, (data) => {
     console.log(`Socket.io event received from '${routes.dashboard}' web page`);
+    console.log('data: ', data);
   });
 
   socket.on(routes.testTreesLibrary, (data) => {
     console.log(`Socket.io event received from '${routes.testTreesLibrary}' web page`);
+    console.log('data: ', data);
   });
 
   socket.on(routes.testProceduresLibrary, (data) => {
     console.log(`Socket.io event received from '${routes.testProceduresLibrary}' web page`);
+    console.log('data: ', data);
   });
 
   socket.on(routes.machinesTests, (data) => {
     console.log(`Socket.io event received from '${routes.machinesTests}' web page`);
+    console.log('data: ', data);
   });
 
   socket.on('disconnect', (data) => {
     console.log('oh a socket.io client is disconnected');
+    console.log('data: ', data);
   });
 };
