@@ -16,7 +16,10 @@ $ npm install
 ```
 
 ## Configure
-Update `config/base.config.json` for your needs
+```
+$ npm default_config
+```
+This command will copy the example configuration file in place of the real one used by the server, only if the last one does not exists. Once done edit `config/base.config.json` for your needs
 
 ## Run
 Ensure that `mysql` is started before launching `htest-server`
