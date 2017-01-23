@@ -4,7 +4,7 @@ Application Programming Interface
 ## Description
 This file intents to cover the entire description of the `htest-server` API
 
-*Note: See `API_example.md` for details about API documentation*
+*__Note__: See `API_example.md` for details about API documentation*
 
 ## Routes
 ### Summary
@@ -18,12 +18,20 @@ This file intents to cover the entire description of the `htest-server` API
 | Machines tests          | `GET`  | `/machines-tests`          |
 
 #### `socket.io` events
-| Name                                             | Event                        |
-|--------------------------------------------------|------------------------------|
-| User has loaded a web page                       | `'connection'`               |
-| User has loaded test trees library web page      | `'/test-trees-library'`      |
-| User has loaded test procedures library web page | `'/test-procedures-library'` |
-| User has loaded machines tests web page          | `'/machines-tests'`          |
+*__Note__: From client(s) to server*  
+*__Note2__: Server answers to client are described with client's events*
+
+| Name                                             | Event                               |
+|--------------------------------------------------|-------------------------------------|
+| User has loaded a web page                       | `'connection'`                      |
+| User has loaded test trees library web page      | `'/test-trees-library'`             |
+| User has loaded test procedures library web page | `'/test-procedures-library'`        |
+| User has loaded machines tests web page          | `'/machines-tests'`                 |
+| Upload new tree                                  | *(handled by socketio-file-upload)* |
+| Add new tree                                     | `'add-new-tree'`                    |
+| Retrieve available trees                         | `'retrieve-available-trees'`        |
+| Retrieve tree content from id                    | `'retrieve-tree-from-id'`           |
+| Delete trees from ids                            | `'delete-trees-from-ids'`           |
 
 ### Web server root `http` `GET` `/`
 > Redirects `/` to `/index`
@@ -130,6 +138,56 @@ This file intents to cover the entire description of the `htest-server` API
 ```js
 {
   protocol: 'socket.io', event: '/machines-tests',
+  input: {}, // no input parameter
+  output: {}, // no output parameter
+}
+```
+
+### Upload new tree `socketio-file-upload`
+> Send a file selected by the user, from the file-system, through `socketio-file-upload`, overlapping `socket.io`
+```js
+{
+  protocol: 'socketio-file-upload', event: undefined, // hidden event name
+  input: {}, // no input parameter
+  output: {}, // no output parameter
+}
+```
+
+### Add new tree `socket.io` `'add-new-tree'`
+> Foo
+```js
+{
+  protocol: 'socket.io', event: 'add-new-tree',
+  input: {}, // no input parameter
+  output: {}, // no output parameter
+}
+```
+
+### Retrieve available trees `socket.io` `'retrieve-available-trees'`
+> Foo
+```js
+{
+  protocol: 'socket.io', event: 'retrieve-available-trees',
+  input: {}, // no input parameter
+  output: {}, // no output parameter
+}
+```
+
+### Retrieve tree content from id `socket.io` `'retrieve-tree-from-id'`
+> Foo
+```js
+{
+  protocol: 'socket.io', event: 'retrieve-tree-from-id',
+  input: {}, // no input parameter
+  output: {}, // no output parameter
+}
+```
+
+### Delete trees from ids `socket.io` `'delete-trees-from-ids'`
+> Foo
+```js
+{
+  protocol: 'socket.io', event: 'delete-trees-from-ids',
   input: {}, // no input parameter
   output: {}, // no output parameter
 }
