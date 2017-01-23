@@ -1,5 +1,6 @@
 const path = require('path');
 const ejs = require('../libraries/ejs');
+const express = require('express');
 
 const routes = {
   dashboard: '/index',
@@ -7,6 +8,8 @@ const routes = {
   testProceduresLibrary: '/test-procedures-library',
   machinesTests: '/machines-tests',
 };
+
+module.exports.routes = routes;
 
 function declarePage(app, httpPath, serverPath, title) {
   app.get(httpPath, (req, res) => {
@@ -25,7 +28,7 @@ function declarePage(app, httpPath, serverPath, title) {
   });
 }
 
-module.exports.initHttpRoutes = (express, app) => {
+module.exports.init = (app) => {
   app.use(express.static(path.resolve(__dirname, '../views/static')));
   app.get('/', (req, res) => {
     res.redirect(routes.dashboard);
@@ -35,31 +38,4 @@ module.exports.initHttpRoutes = (express, app) => {
   declarePage(app, routes.testTreesLibrary, '../views/ejs/test-trees-library.ejs', 'Test trees library');
   declarePage(app, routes.testProceduresLibrary, '../views/ejs/test-procedures-library.ejs', 'Test procedures library');
   declarePage(app, routes.machinesTests, '../views/ejs/machines-tests.ejs', 'Machines tests');
-};
-
-module.exports.initSocketIoEvents = (socket) => {
-  socket.on(routes.dashboard, (data) => {
-    console.log(`Socket.io event received from '${routes.dashboard}' web page`);
-    console.log('data: ', data);
-  });
-
-  socket.on(routes.testTreesLibrary, (data) => {
-    console.log(`Socket.io event received from '${routes.testTreesLibrary}' web page`);
-    console.log('data: ', data);
-  });
-
-  socket.on(routes.testProceduresLibrary, (data) => {
-    console.log(`Socket.io event received from '${routes.testProceduresLibrary}' web page`);
-    console.log('data: ', data);
-  });
-
-  socket.on(routes.machinesTests, (data) => {
-    console.log(`Socket.io event received from '${routes.machinesTests}' web page`);
-    console.log('data: ', data);
-  });
-
-  socket.on('disconnect', (data) => {
-    console.log('oh a socket.io client is disconnected');
-    console.log('data: ', data);
-  });
 };

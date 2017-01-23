@@ -1,14 +1,18 @@
-const express = require('express');
-
 const graphicalInterface = require('./graphicalInterface');
+const dashboard = require('./dashboard');
+const testTreesLibrary = require('./testTreesLibrary');
+const testProceduresLibrary = require('./testProceduresLibrary');
+const machinesTests = require('./machinesTests');
 
-module.exports.initHttpRoutes = (app) => {
-  graphicalInterface.initHttpRoutes(express, app);
-};
+module.exports.init = (app, io) => {
+  // init http routes
+  graphicalInterface.init(app);
 
-module.exports.initSocketIoEvents = (io) => {
+  // init socket.io events
   io.on('connection', (socket) => {
-    console.log('oh a new client is connected !');
-    graphicalInterface.initSocketIoEvents(socket);
+    dashboard.init(socket);
+    testTreesLibrary.init(socket);
+    testProceduresLibrary.init(socket);
+    machinesTests.init(socket);
   });
 };

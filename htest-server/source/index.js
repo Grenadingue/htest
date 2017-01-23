@@ -2,17 +2,18 @@
 
 const config = require('./config/base.config');
 const app = require('./libraries/express')();
-const socketIo = require('./libraries/socket.io');
+const server = require('http').createServer(app);
+const io = require('./libraries/socket.io')(server);
 const router = require('./routes');
 const models = require('./models');
 
 console.log('Initializing htest server...');
 models.init().then(() => {
   console.log('Database model(s) successfuly initialized');
-  router.initHttpRoutes(app);
-  const server = app.listen(config.webServer.port, () => {
-    console.log(`Web server listening on port ${config.webServer.port}`);
-    router.initSocketIoEvents(socketIo(server));
+  console.log(`Initializing http server on port ${config.webServer.port}...`);
+  router.init(app, io);
+  server.listen(config.webServer.port, () => {
+    console.log('Http server successfuly initialized\n');
   });
 }).catch((error) => {
   console.log('Fatal error during server initialization');
