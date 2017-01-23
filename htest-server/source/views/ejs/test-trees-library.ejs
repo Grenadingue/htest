@@ -44,6 +44,12 @@
     socket.on('connect', () => {
       console.log('connect event received');
       socket.emit('<%= pagePath %>');
+      socket.on('retrieve-available-trees-response', (data) => {
+        console.log('retrieve-available-trees-response event received');
+        console.log(data);
+      });
+      socket.emit('retrieve-available-trees', 'fake parameters');
+      socket.emit('retrieve-available-trees', null);
     });
     socket.on('disconnect', () => {
       console.log('disconnect event received');

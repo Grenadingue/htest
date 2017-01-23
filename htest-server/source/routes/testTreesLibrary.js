@@ -1,23 +1,45 @@
 const guiRoutes = require('./graphicalInterface').routes;
+const controller = require('../controllers/testTreesLibrary');
+const sioUploader = require('../libraries/socketio-file-upload');
 
-module.exports.init = (socket) => {
+const eventsAndFunctions = [
+  { eventName: 'add-new-tree', controllerFct: controller.addNewTree },
+  { eventName: 'retrieve-available-trees', controllerFct: controller.retrieveAvailableTrees },
+  { eventName: 'retrieve-tree-from-id', controllerFct: controller.retrieveTreeFromId },
+  { eventName: 'delete-trees-from-ids', controllerFct: controller.deleteTreesFromIds },
+];
+
+function bindEventToControllerFct(socket, inputEvent, controllerFct) {
+  const outputEvent = `${inputEvent}-response`;
+  socket.on(inputEvent, (inputParameters) => {
+    console.log(`testTreesLibrary router:\t'${inputEvent}' event received`);
+    controllerFct(inputParameters).then((output) => {
+      output.status = 'success';
+      socket.emit(outputEvent, output);
+    }).catch((output) => {
+      output.status = 'failure';
+      socket.emit(outputEvent, output);
+    });
+  });
+}
+
+module.exports.init = (socket, app) => {
   socket.on(guiRoutes.testTreesLibrary, () => {
+    const fileUploader = sioUploader(app);
+
     console.log(`testTreesLibrary router:\tclient connected to '${guiRoutes.testTreesLibrary}' web page`);
+    fileUploader.listen(socket);
 
-    socket.on('add-new-tree', () => {
-      console.log('testTreesLibrary router:\t`add-new-tree` event received');
+    eventsAndFunctions.forEach((item) => {
+      bindEventToControllerFct(socket, item.eventName, item.controllerFct);
     });
 
-    socket.on('retrieve-available-trees', () => {
-      console.log('testTreesLibrary router:\t`retrieve-available-trees` event received');
+    fileUploader.on('saved', (event) => {
+      console.log(event.file);
     });
 
-    socket.on('retrieve-tree-from-id', () => {
-      console.log('testTreesLibrary router:\t`retrieve-tree-from-id` event received');
-    });
-
-    socket.on('delete-trees-from-ids', () => {
-      console.log('testTreesLibrary router:\t`delete-trees-from-ids` event received');
+    fileUploader.on('error', (event) => {
+      console.log('Error from uploader', event);
     });
 
     socket.on('disconnect', () => {

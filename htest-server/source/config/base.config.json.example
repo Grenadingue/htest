@@ -11,5 +11,6 @@
       "dialect": "mysql",
       "logging": false
     }
-  }
+  },
+  "uploadDirectory": "/tmp/htest-server-uploads"
 }
