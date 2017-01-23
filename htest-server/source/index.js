@@ -15,7 +15,7 @@ models.init().then(() => {
     router.initSocketIoEvents(socketIo(server));
   });
 }).catch((error) => {
-  console.log('Fatal error during databas model(s) initialization');
+  console.log('Fatal error during server initialization');
   console.log(error);
   console.log('Exiting process...');
   process.exit(1);
