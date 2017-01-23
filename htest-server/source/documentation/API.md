@@ -4,49 +4,26 @@ Application Programming Interface
 ## Description
 This file intents to cover the entire description of the `htest-server` API
 
-*Note: See "Example" in "Routes" section for details about how a route is described*
+*Note: See `API_example.md` for details about API documentation*
 
 ## Routes
 ### Summary
-| Name | Protocol | Method | Path/Event |
-|------|----------|--------|------------|
-| Example | `http` | `POST` | `/foo/bar` |
-| Web server root | `http` | `GET` | `/` |
-| Dashboard | `http` | `GET` | `/index` |
-| Test trees library | `http` | `GET` | `/test-trees-library` |
-| Test procedures library | `http` | `GET` | `/test-procedures-library` |
-| Machines tests | `http` | `GET` | `/machines-tests` |
-| User has loaded a web page | `socket.io` | - | `connection` |
-| User has loaded test trees library web page | `socket.io` | - | `/test-trees-library` |
-| User has loaded test procedures library web page | `socket.io` | - | `/test-procedures-library` |
-| User has loaded machines tests web page | `socket.io` | - | `/machines-tests` |
+#### `http` routes
+| Name                    | Method | Path                       |
+|-------------------------|--------|----------------------------|
+| Web server root         | `GET`  | `/`                        |
+| Dashboard               | `GET`  | `/index`                   |
+| Test trees library      | `GET`  | `/test-trees-library`      |
+| Test procedures library | `GET`  | `/test-procedures-library` |
+| Machines tests          | `GET`  | `/machines-tests`          |
 
-### Example `http` `POST` `/foo/bar`
-> Here is the description of everything needed to access this sample (fake) route. This code will never be interpreted by a machine, we must consider the reader as a human. You. As the route description is represented as json, we must keep in mind that this very flexible, and that __a description is only a possible representation of a route__.
-```js
-{
-  protocol: 'http', method: 'POST', path: '/foo/bar',
-  input: { // describes the input parameters
-    encoding: 'form-data', data: {
-      foo: { encoding: 'int' },
-      bar: { encoding: 'string' }, // important comment about `bar`
-      baz: { encoding: 'string', optional: true },
-      beer: { encoding: 'string', optional: true, defaultValue: 'rince cochon' },
-    },
-  },
-  output: { // describes the possible outputs
-    ifSuccess: {
-      encoding: 'text/html', data: 'some sample text', statusCode: 200,
-    },
-    ifForbidden: {
-      encoding: 'text/html', data: 'forbidden ressource', statusCode: 403,
-    },
-    ifNotFound: {
-      encoding: 'text/html', data: 'foo not found', statusCode: 404,
-    },
-  },
-}
-```
+#### `socket.io` events
+| Name                                             | Event                        |
+|--------------------------------------------------|------------------------------|
+| User has loaded a web page                       | `'connection'`               |
+| User has loaded test trees library web page      | `'/test-trees-library'`      |
+| User has loaded test procedures library web page | `'/test-procedures-library'` |
+| User has loaded machines tests web page          | `'/machines-tests'`          |
 
 ### Web server root `http` `GET` `/`
 > Redirects `/` to `/index`
@@ -118,7 +95,7 @@ This file intents to cover the entire description of the `htest-server` API
 }
 ```
 
-### User has loaded a web page `socket.io` `connection`
+### User has loaded a web page `socket.io` `'connection'`
 > Automatic and mandatory event which makes the server listening to `/index`, `/test-trees-library`, `/test-procedures-library` and `/machines-tests` socket.io events
 ```js
 {
@@ -128,7 +105,7 @@ This file intents to cover the entire description of the `htest-server` API
 }
 ```
 
-### User has loaded test trees library web page `socket.io` `/test-trees-library`
+### User has loaded test trees library web page `socket.io` `'/test-trees-library'`
 > Event emited after `connection`, makes (theoretically) the server listening to the test trees library specific events
 ```js
 {
@@ -138,7 +115,7 @@ This file intents to cover the entire description of the `htest-server` API
 }
 ```
 
-### User has loaded test procedures library web page `socket.io` `/test-procedures-library`
+### User has loaded test procedures library web page `socket.io` `'/test-procedures-library'`
 > Event emited after `connection`, makes (theoretically) the server listening to the test procedures library specific events
 ```js
 {
@@ -148,7 +125,7 @@ This file intents to cover the entire description of the `htest-server` API
 }
 ```
 
-### User has loaded machines tests web page `socket.io` `/machines-tests`
+### User has loaded machines tests web page `socket.io` `'/machines-tests'`
 > Event emited after `connection`, makes (theoretically) the server listening to the machines tests specific events
 ```js
 {
