@@ -12,6 +12,7 @@
     "rules": {
         "max-len": "off",
         "no-console": "off",
-        "no-param-reassign": "off"
+        "no-param-reassign": "off",
+        "arrow-parens": ["error", "always"]
     }
 }
