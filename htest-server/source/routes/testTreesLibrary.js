@@ -34,13 +34,8 @@ module.exports.init = (socket, app) => {
       bindEventToControllerFct(socket, item.eventName, item.controllerFct);
     });
 
-    fileUploader.on('saved', (event) => {
-      console.log(event.file);
-    });
-
-    fileUploader.on('error', (event) => {
-      console.log('Error from uploader', event);
-    });
+    fileUploader.on('saved', controller.onFileUploadSuccess);
+    fileUploader.on('error', controller.onFileUploadFailure);
 
     socket.on('disconnect', () => {
       console.log(`testTreesLibrary router:\tclient disconnected from '${guiRoutes.testTreesLibrary}' web page\n`);

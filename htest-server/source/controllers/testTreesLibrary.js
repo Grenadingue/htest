@@ -1,3 +1,5 @@
+const fileUploader = require('../managers/fileUploader');
+
 module.exports.addNewTree = (parameters) => new Promise((fulfill, reject) => {
   console.log('testTreesLibrary controller:\taddNewTree()');
   console.log(parameters);
@@ -8,23 +10,22 @@ module.exports.addNewTree = (parameters) => new Promise((fulfill, reject) => {
   }
 });
 
-module.exports.retrieveAvailableTrees = (parameters) => new Promise((fulfill, reject) => {
+module.exports.retrieveAvailableTrees = () => new Promise((fulfill) => {
   console.log('testTreesLibrary controller:\tretrieveAvailableTrees()');
-  console.log(parameters);
-  if (parameters) {
-    fulfill({ data: 'fake success' });
-  } else {
-    reject({ data: 'fake error' });
-  }
+  fulfill({ trees: [
+    { id: 0, name: 'Foo tree', version: 1.0 },
+    { id: 1, name: 'Foo tree', version: 1.1 },
+    { id: 2, name: 'Foo tree', version: 2.0 },
+  ] });
 });
 
 module.exports.retrieveTreeFromId = (parameters) => new Promise((fulfill, reject) => {
   console.log('testTreesLibrary controller:\tretrieveTreeFromId()');
   console.log(parameters);
-  if (parameters) {
-    fulfill({ data: 'fake success' });
+  if (parameters && parameters.id) {
+    fulfill({ tree: { id: parameters.id, name: 'foo tree', version: 1.0, raw: '<xml>raw tree data</xml>' } });
   } else {
-    reject({ data: 'fake error' });
+    reject({ error: 'invalid input parameters' });
   }
 });
 
@@ -37,3 +38,7 @@ module.exports.deleteTreesFromIds = (parameters) => new Promise((fulfill, reject
     reject({ data: 'fake error' });
   }
 });
+
+module.exports.onFileUploadSuccess = fileUploader.onSaved;
+
+module.exports.onFileUploadFailure = fileUploader.onError;
