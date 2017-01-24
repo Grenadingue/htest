@@ -13,9 +13,11 @@ module.exports.addNewTree = (parameters) => new Promise((fulfill, reject) => {
 module.exports.retrieveAvailableTrees = () => new Promise((fulfill) => {
   console.log('testTreesLibrary controller:\tretrieveAvailableTrees()');
   fulfill({ trees: [
-    { id: 0, name: 'Foo tree', version: 1.0 },
-    { id: 1, name: 'Foo tree', version: 1.1 },
-    { id: 2, name: 'Foo tree', version: 2.0 },
+    { id: 0, name: 'Foo tree', version: 1 },
+    { id: 1, name: 'Foo tree', version: 2 },
+    { id: 2, name: 'Bar tree', version: 1 },
+    { id: 3, name: 'Foo tree', version: 3 },
+    { id: 4, name: 'Bar tree', version: 2 },
   ] });
 });
 

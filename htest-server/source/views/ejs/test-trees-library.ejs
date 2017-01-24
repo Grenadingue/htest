@@ -10,7 +10,7 @@
 
     <div id="page-wrapper">
 
-        <div class="container-fluid">
+        <div class="container-fluid" id="page-wrapper-fluid">
 
           <!-- Page Heading -->
           <div class="row">
@@ -39,18 +39,138 @@
 
   <script src="/socket.io/socket.io.js"></script>
   <script>
+    function removeButtonsAndList() {
+      document.getElementById('create-update-tree').outerHTML = '';
+      document.getElementById('trees-table').outerHTML = '';
+    }
+
+    function displayCreateTree() {
+      removeButtonsAndList();
+    }
+
+    function displayUpdateTree() {
+      removeButtonsAndList();
+    }
+
+    function displayTree(data) {
+      removeButtonsAndList();
+      console.log('user wants to view tree with id', data.target.treeId);
+      const treeViewerDiv = document.createElement('div');
+      const treeViewerTitle = document.createElement('div');
+      const title = document.createElement('h2');
+      treeViewerDiv.setAttribute("id", "tree-viewer");
+      title.appendChild(document.createTextNode('$tree-name (v.$tree-version)'));
+      treeViewerTitle.setAttribute("class", "page-header");
+      treeViewerTitle.appendChild(title);
+      treeViewerDiv.appendChild(treeViewerTitle);
+      document.getElementById('page-wrapper-fluid').appendChild(treeViewerDiv);
+    }
+
+    function deleteTree(data) {
+      console.log('user wants to detete tree with id', data.target.treeId);
+    }
+
+    function makeTableResponsive(data) {
+      const tableResponsive = document.createElement('div');
+      const tableTitle = document.createElement('div');
+      const table = document.createElement('table');
+      const title = document.createElement('h2');
+      tableResponsive.setAttribute("class", "table-responsive");
+      tableResponsive.setAttribute("id", "trees-table");
+      table.setAttribute("class", "table table-hover");
+      title.appendChild(document.createTextNode('Available trees'));
+      tableTitle.setAttribute("class", "page-header");
+      tableTitle.appendChild(title);
+      tableResponsive.appendChild(tableTitle);
+      tableResponsive.appendChild(table);
+
+      // table head
+      const tableHead = document.createElement('thead');
+      const headItems = document.createElement('tr');
+      let item = null;
+      Object.keys(data[0]).forEach((itemKey) => {
+        item = document.createElement('th');
+        item.appendChild(document.createTextNode(itemKey));
+        headItems.appendChild(item);
+      });
+      item = document.createElement('th');
+      item.appendChild(document.createTextNode('actions'));
+      headItems.appendChild(item);
+      tableHead.appendChild(headItems);
+      table.appendChild(tableHead);
+
+      // table body
+      const tableBody = document.createElement('tbody');
+      data.forEach((bodyLineData) => {
+        // line data
+        const bodyLine = document.createElement('tr');
+        Object.keys(bodyLineData).forEach((itemKey) => {
+          const itemData = bodyLineData[itemKey];
+          item = document.createElement('td');
+          item.appendChild(document.createTextNode(itemData));
+          bodyLine.appendChild(item);
+        });
+        // view button
+        let button = document.createElement('button');
+        button.setAttribute("type", "button");
+        button.setAttribute("class", "btn btn-sm btn-primary");
+        button.treeId = bodyLineData.id;
+        button.addEventListener("click", displayTree, false);
+        button.appendChild(document.createTextNode('View'));
+        item = document.createElement('td');
+        item.appendChild(button);
+        bodyLine.appendChild(item);
+        // delete button
+        button = document.createElement('button');
+        button.setAttribute("type", "button");
+        button.setAttribute("class", "btn btn-sm btn-danger");
+        button.treeId = bodyLineData.id;
+        button.addEventListener("click", deleteTree, false);
+        button.appendChild(document.createTextNode('Delete'));
+        item.appendChild(button);
+
+        bodyLine.appendChild(item);
+        tableBody.appendChild(bodyLine);
+      });
+      table.appendChild(tableBody);
+      return tableResponsive;
+    }
+
+    function makeButton(id, text, clickListener) {
+      const button = document.createElement('button');
+      button.setAttribute("type", "button");
+      button.setAttribute("class", "btn btn-primary");
+      button.setAttribute("id", id);
+      button.appendChild(document.createTextNode(text));
+      button.addEventListener("click", clickListener, false);
+      return button;
+    }
+
+    function makeCreateUpdateTreeButtons() {
+      const paragraph = document.createElement('p');
+      paragraph.setAttribute("id", "create-update-tree");
+      paragraph.appendChild(makeButton('create-tree-btn', 'Create tree', displayCreateTree));
+      paragraph.appendChild(makeButton('update-tree-btn', 'Update existing tree', displayUpdateTree));
+      return paragraph;
+    }
+
+    document.getElementById('page-wrapper-fluid').appendChild(makeCreateUpdateTreeButtons());
+
     const socket = io(window.location.host);
 
     socket.on('connect', () => {
       console.log('connect event received');
       socket.emit('<%= pagePath %>');
+
       socket.on('retrieve-available-trees-response', (data) => {
-        console.log('retrieve-available-trees-response event received');
-        console.log(data);
+        if (data && data.status === 'success' && data.trees) {
+          document.getElementById('page-wrapper-fluid').appendChild(makeTableResponsive(data.trees));
+        }
       });
-      socket.emit('retrieve-available-trees', 'fake parameters');
-      socket.emit('retrieve-available-trees', null);
+
+      socket.emit('retrieve-available-trees');
     });
+
     socket.on('disconnect', () => {
       console.log('disconnect event received');
     });
