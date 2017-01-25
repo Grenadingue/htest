@@ -6,6 +6,7 @@ const eventsAndFunctions = [
   { eventName: 'add-new-tree', controllerFct: controller.addNewTree },
   { eventName: 'retrieve-available-trees', controllerFct: controller.retrieveAvailableTrees },
   { eventName: 'retrieve-tree-from-id', controllerFct: controller.retrieveTreeFromId },
+  { eventName: 'retrieve-trees-from-root-id', controllerFct: controller.retrieveTreesFromRootId },
   { eventName: 'delete-trees-from-ids', controllerFct: controller.deleteTreesFromIds },
 ];
 

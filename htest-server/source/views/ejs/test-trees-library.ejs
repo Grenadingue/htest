@@ -9,22 +9,9 @@
     <% include sbadmin/navigation_bars %>
 
     <div id="page-wrapper">
-
-        <div class="container-fluid" id="page-wrapper-fluid">
-
-          <!-- Page Heading -->
-          <div class="row">
-            <div class="col-lg-12">
-              <h1 class="page-header">
-                <%= pageTitle %>
-              </h1>
-            </div>
-          </div>
-          <!-- /.row -->
-
+      <div class="container-fluid" id="page-wrapper-fluid">
       </div>
       <!-- /.container-fluid -->
-
     </div>
     <!-- /#page-wrapper -->
 
@@ -39,141 +26,291 @@
 
   <script src="/socket.io/socket.io.js"></script>
   <script>
+    const state = { loaded: false };
+    let socket;
+
+    function clearPage() {
+      document.getElementById('page-wrapper-fluid').innerHTML = '';
+    }
+
+    function displayPageTitle(inputTitle) {
+      const pageWrapper = document.getElementById('page-wrapper-fluid');
+      const titleWrapper1 = document.createElement('div');
+      const titleWrapper2 = document.createElement('div');
+      const titleWrapper3 = document.createElement('h1');
+      const title = inputTitle ? inputTitle : '<%= pageTitle %>';
+
+      titleWrapper1.setAttribute('class', 'row');
+      titleWrapper2.setAttribute('class', 'col-lg-12');
+      titleWrapper3.setAttribute('class', 'page-header');
+      titleWrapper3.appendChild(document.createTextNode(title));
+      titleWrapper2.appendChild(titleWrapper3);
+      titleWrapper1.appendChild(titleWrapper2);
+      pageWrapper.appendChild(titleWrapper1);
+    }
+
+    function displaySubSection(inputTitle, id) {
+      const pageWrapper = document.getElementById('page-wrapper-fluid');
+      const sectionWrapper = document.createElement('div');
+      const titleWrapper = document.createElement('div');
+      const title = document.createElement('h2');
+
+      sectionWrapper.setAttribute('class', 'table-responsive');
+      sectionWrapper.setAttribute('id', id);
+      titleWrapper.setAttribute('class', 'page-header');
+      title.appendChild(document.createTextNode(inputTitle));
+      titleWrapper.appendChild(title);
+      sectionWrapper.appendChild(titleWrapper);
+      pageWrapper.appendChild(titleWrapper);
+      return sectionWrapper;
+    }
+
+    function createButton(id, class_, text, clickListener) {
+      const button = document.createElement('button');
+
+      button.setAttribute('type', 'button');
+      button.setAttribute('class', class_);
+      if (id) {
+        button.setAttribute('id', id);
+      }
+      button.appendChild(document.createTextNode(text));
+      button.addEventListener('click', clickListener, false);
+      return button;
+    }
+
+    function createTable(tableHeadContent, tableContent) {
+      const table = document.createElement('table');
+      const tableHead = document.createElement('thead');
+      const headItems = document.createElement('tr');
+      const tableBody = document.createElement('tbody');
+      let item;
+
+      table.setAttribute('class', 'table table-hover');
+
+      // table head
+      tableHeadContent.forEach((cell) => {
+        item = document.createElement('th');
+        item.appendChild(document.createTextNode(cell));
+        headItems.appendChild(item);
+      });
+      tableHead.appendChild(headItems);
+      table.appendChild(tableHead);
+
+      // table body
+      tableContent.forEach((line) => {
+        const tableLine = document.createElement('tr');
+        line.forEach((cell) => {
+          item = document.createElement('td');
+          item.appendChild(cell);
+          tableLine.appendChild(item);
+        });
+        tableBody.appendChild(tableLine);
+      });
+      table.appendChild(tableBody);
+      return table;
+    }
+
+    //
     function removeButtonsAndList() {
       document.getElementById('create-update-tree').outerHTML = '';
       document.getElementById('trees-table').outerHTML = '';
     }
 
+    function displayTree(tree) {
+      let treeViewerWrapper;
+      const treeViewer = document.createElement('p');
+
+      clearPage();
+      displayPageTitle();
+      treeViewerWrapper = displaySubSection(`${tree.name} (v${tree.version})`, 'tree-viewer');
+      treeViewer.appendChild(document.createTextNode('(Non rendered XML tree)'));
+      treeViewer.appendChild(document.createElement('br'));
+      treeViewer.appendChild(document.createTextNode(`"${tree.raw}"`));
+      treeViewerWrapper.appendChild(treeViewer);
+      document.getElementById('page-wrapper-fluid').appendChild(treeViewerWrapper);
+
+
+      // const treeViewerDiv = document.createElement('div');
+      // const treeViewerTitle = document.createElement('div');
+      // const title = document.createElement('h2');
+      // const treeView = document.createElement('p');
+      // treeViewerDiv.setAttribute('id', 'tree-viewer');
+      // title.appendChild(document.createTextNode(`${tree.name} (v${tree.version})`));
+      // treeViewerTitle.setAttribute('class', 'page-header');
+      // treeViewerTitle.appendChild(title);
+      // treeViewerDiv.appendChild(treeViewerTitle);
+      // treeView.appendChild(document.createTextNode('(Non rendered XML tree)'));
+      // treeView.appendChild(document.createElement('br'));
+      // treeView.appendChild(document.createTextNode(`"${tree.raw}"`));
+      // treeViewerDiv.appendChild(treeView);
+      // document.getElementById('page-wrapper-fluid').appendChild(treeViewerDiv);
+    }
+
+    function displayCreateTreeFamily() {
+      clearPage();
+      displayPageTitle();
+      displaySubSection('Create tree family', 'create-tree-family');
+    }
+
+    function displayUpdateTreeFamily() {
+      clearPage();
+      displayPageTitle();
+      displaySubSection('Update tree family', 'update-tree-family');
+    }
+
     function displayCreateTree() {
-      removeButtonsAndList();
+      clearPage();
+      displayPageTitle();
+      displaySubSection('Create tree', 'create-tree');
     }
 
     function displayUpdateTree() {
-      removeButtonsAndList();
+      clearPage();
+      displayPageTitle();
+      displaySubSection('Update tree', 'update-tree');
     }
 
-    function displayTree(data) {
-      removeButtonsAndList();
-      console.log('user wants to view tree with id', data.target.treeId);
-      const treeViewerDiv = document.createElement('div');
-      const treeViewerTitle = document.createElement('div');
-      const title = document.createElement('h2');
-      treeViewerDiv.setAttribute("id", "tree-viewer");
-      title.appendChild(document.createTextNode('$tree-name (v.$tree-version)'));
-      treeViewerTitle.setAttribute("class", "page-header");
-      treeViewerTitle.appendChild(title);
-      treeViewerDiv.appendChild(treeViewerTitle);
-      document.getElementById('page-wrapper-fluid').appendChild(treeViewerDiv);
-    }
+    // displayTreeVersions() {
+    // }
 
-    function deleteTree(data) {
-      console.log('user wants to detete tree with id', data.target.treeId);
-    }
+    function displayTreeFamily(data) {
+      clearPage();
+      displayPageTitle();
 
-    function makeTableResponsive(data) {
-      const tableResponsive = document.createElement('div');
-      const tableTitle = document.createElement('div');
-      const table = document.createElement('table');
-      const title = document.createElement('h2');
-      tableResponsive.setAttribute("class", "table-responsive");
-      tableResponsive.setAttribute("id", "trees-table");
-      table.setAttribute("class", "table table-hover");
-      title.appendChild(document.createTextNode('Available trees'));
-      tableTitle.setAttribute("class", "page-header");
-      tableTitle.appendChild(title);
-      tableResponsive.appendChild(tableTitle);
-      tableResponsive.appendChild(table);
+      const pageWrapper = document.getElementById('page-wrapper-fluid');
+      const tableResponsive = displaySubSection(data.trees[0].name, 'tree-family-table');
+      const tableHeadContent = [];
+      const tableContent = [];
 
-      // table head
-      const tableHead = document.createElement('thead');
-      const headItems = document.createElement('tr');
-      let item = null;
-      Object.keys(data[0]).forEach((itemKey) => {
-        item = document.createElement('th');
-        item.appendChild(document.createTextNode(itemKey));
-        headItems.appendChild(item);
+      Object.keys(data.trees[0]).forEach((itemKey) => {
+        tableHeadContent.push(itemKey);
       });
-      item = document.createElement('th');
-      item.appendChild(document.createTextNode('actions'));
-      headItems.appendChild(item);
-      tableHead.appendChild(headItems);
-      table.appendChild(tableHead);
+      tableHeadContent.push('view tree version');
+      tableHeadContent.push('delete tree version');
 
-      // table body
-      const tableBody = document.createElement('tbody');
-      data.forEach((bodyLineData) => {
-        // line data
-        const bodyLine = document.createElement('tr');
-        Object.keys(bodyLineData).forEach((itemKey) => {
-          const itemData = bodyLineData[itemKey];
-          item = document.createElement('td');
-          item.appendChild(document.createTextNode(itemData));
-          bodyLine.appendChild(item);
+      data.trees.forEach((line) => {
+        const tableLine = [];
+        Object.keys(line).forEach((itemKey) => {
+          const cellContent = line[itemKey];
+          tableLine.push(document.createTextNode(cellContent));
         });
-        // view button
-        let button = document.createElement('button');
-        button.setAttribute("type", "button");
-        button.setAttribute("class", "btn btn-sm btn-primary");
-        button.treeId = bodyLineData.id;
-        button.addEventListener("click", displayTree, false);
-        button.appendChild(document.createTextNode('View'));
-        item = document.createElement('td');
-        item.appendChild(button);
-        bodyLine.appendChild(item);
-        // delete button
-        button = document.createElement('button');
-        button.setAttribute("type", "button");
-        button.setAttribute("class", "btn btn-sm btn-danger");
-        button.treeId = bodyLineData.id;
-        button.addEventListener("click", deleteTree, false);
-        button.appendChild(document.createTextNode('Delete'));
-        item.appendChild(button);
+        let button;
+        button = createButton(null, 'btn btn-sm btn-primary', 'View', null);
+        button.tree = line;
+        tableLine.push(button);
 
-        bodyLine.appendChild(item);
-        tableBody.appendChild(bodyLine);
+        button = createButton(null, 'btn btn-sm btn-danger', 'Delete', null);
+        button.tree = line;
+        tableLine.push(button);
+
+        tableContent.push(tableLine);
       });
-      table.appendChild(tableBody);
+
+      const table = createTable(tableHeadContent, tableContent);
+      tableResponsive.appendChild(table);
+      pageWrapper.appendChild(tableResponsive);
       return tableResponsive;
     }
 
-    function makeButton(id, text, clickListener) {
-      const button = document.createElement('button');
-      button.setAttribute("type", "button");
-      button.setAttribute("class", "btn btn-primary");
-      button.setAttribute("id", id);
-      button.appendChild(document.createTextNode(text));
-      button.addEventListener("click", clickListener, false);
-      return button;
+    function retrieveAndDisplayTreeFamily(data) {
+      console.log('user wants to view tree family', data.target.treeFamily);
+      socket.emit('retrieve-trees-from-root-id', { id: data.target.treeFamily.rootId });
+      socket.on('retrieve-trees-from-root-id-response', (response) => {
+        if (response && response.status === 'success' && response.trees && response.rootId === data.target.treeFamily.rootId) {
+          console.log(response);
+          displayTreeFamily(response);
+        }
+      });
     }
 
-    function makeCreateUpdateTreeButtons() {
-      const paragraph = document.createElement('p');
-      paragraph.setAttribute("id", "create-update-tree");
-      paragraph.appendChild(makeButton('create-tree-btn', 'Create tree', displayCreateTree));
-      paragraph.appendChild(makeButton('update-tree-btn', 'Update existing tree', displayUpdateTree));
-      return paragraph;
+    function updateTreeFamily(data) {
+      console.log('user wants to update tree family', data.target.treeFamily);
+      displayUpdateTreeFamily(data.target.treeFamily);
     }
 
-    document.getElementById('page-wrapper-fluid').appendChild(makeCreateUpdateTreeButtons());
+    function deleteTreeFamily(data) {
+      console.log('user wants to detete tree family', data.target.treeFamily);
+    }
 
-    const socket = io(window.location.host);
+    // function deleteTree(data) {
+    //   console.log('user wants to detete tree with id', data.target.id);
+    // }
 
-    socket.on('connect', () => {
-      console.log('connect event received');
-      socket.emit('<%= pagePath %>');
+    function displayTreeFamiliesTable(data) {
+      const pageWrapper = document.getElementById('page-wrapper-fluid');
+      const tableResponsive = displaySubSection('Tree families', 'trees-table');
+      const tableHeadContent = [];
+      const tableContent = [];
 
-      socket.on('retrieve-available-trees-response', (data) => {
-        if (data && data.status === 'success' && data.trees) {
-          document.getElementById('page-wrapper-fluid').appendChild(makeTableResponsive(data.trees));
+      Object.keys(data[0]).forEach((itemKey) => {
+        tableHeadContent.push(itemKey);
+      });
+      tableHeadContent.push('view all versions');
+      tableHeadContent.push('add new version');
+      tableHeadContent.push('delete all versions');
+
+      data.forEach((line) => {
+        const tableLine = [];
+        Object.keys(line).forEach((itemKey) => {
+          const cellContent = line[itemKey];
+          tableLine.push(document.createTextNode(cellContent));
+        });
+        let button;
+        button = createButton(null, 'btn btn-sm btn-primary', 'View', retrieveAndDisplayTreeFamily);
+        button.treeFamily = line;
+        tableLine.push(button);
+
+        button = createButton(null, 'btn btn-sm btn-success', 'Update', updateTreeFamily); // be carefull about click callback !!
+        button.treeFamily = line;
+        tableLine.push(button);
+
+        button = createButton(null, 'btn btn-sm btn-danger', 'Delete', deleteTreeFamily);
+        button.treeFamily = line;
+        tableLine.push(button);
+
+        tableContent.push(tableLine);
+      });
+
+      const table = createTable(tableHeadContent, tableContent);
+      tableResponsive.appendChild(table);
+      pageWrapper.appendChild(tableResponsive);
+      return tableResponsive;
+    }
+
+    function displayInitialPage() {
+      const pageWrapper = document.getElementById('page-wrapper-fluid');
+      const createTreeFamilyBtn = createButton(null, 'btn btn-primary', 'Create tree family', displayCreateTreeFamily);
+
+      clearPage();
+      displayPageTitle();
+      pageWrapper.appendChild(createTreeFamilyBtn);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      socket = io(window.location.host);
+      displayInitialPage();
+
+      socket.on('connect', () => {
+        console.log('connect event received');
+
+        socket.on('retrieve-available-trees-response', (data) => {
+          console.log(data);
+          if (data && data.status === 'success' && data.trees) {
+            displayTreeFamiliesTable(data.trees);
+          }
+        });
+
+        if (!state.loaded) {
+          socket.emit('<%= pagePath %>');
+          socket.emit('retrieve-available-trees');
+          state.loaded = true;
         }
       });
 
-      socket.emit('retrieve-available-trees');
-    });
-
-    socket.on('disconnect', () => {
-      console.log('disconnect event received');
-    });
+      socket.on('disconnect', () => {
+        console.log('disconnect event received');
+      });
+    }, false);
   </script>
 
 </body>
