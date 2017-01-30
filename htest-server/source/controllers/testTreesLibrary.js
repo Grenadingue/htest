@@ -62,7 +62,7 @@ module.exports.retrieveTreesFromRootId = (parameters) => new Promise((fulfill, r
 module.exports.retrieveTreeFromId = (parameters) => new Promise((fulfill, reject) => {
   console.log('testTreesLibrary controller:\tretrieveTreeFromId()');
   console.log(parameters);
-  if (parameters && parameters.id) {
+  if (parameters && ('id' in parameters)) {
     if (lolDatabase.trees[parameters.id]) {
       fulfill({ tree: lolDatabase.trees[parameters.id] });
     } else {
