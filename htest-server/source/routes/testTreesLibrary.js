@@ -8,6 +8,9 @@ const eventsAndFunctions = [
   { eventName: 'retrieve-tree-from-id', controllerFct: controller.retrieveTreeFromId },
   { eventName: 'retrieve-trees-from-root-id', controllerFct: controller.retrieveTreesFromRootId },
   { eventName: 'delete-trees-from-ids', controllerFct: controller.deleteTreesFromIds },
+  { eventName: 'validate-new-tree-family-name', controllerFct: controller.validateNewTreeFamilyName },
+  { eventName: 'validate-new-tree-data', controllerFct: controller.validateNewTreeData },
+  { eventName: 'submit-new-tree', controllerFct: controller.processNewTreeSubmission },
 ];
 
 function bindEventToControllerFct(socket, inputEvent, controllerFct) {

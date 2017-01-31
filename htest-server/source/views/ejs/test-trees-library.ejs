@@ -47,6 +47,7 @@
         textInput: createTextInput,
         fileInput: createFileInput,
         alert: createAlert,
+        fieldset: createFieldset,
       };
 
       if (createFunctions[element]) {
@@ -138,6 +139,12 @@
 
       textInputWrapper.setAttribute('class', 'form-group');
       textInput.setAttribute('class', 'form-control');
+      if (params.id) {
+        textInput.setAttribute('id', params.id);
+      }
+      if (params.onBlur) {
+        textInput.addEventListener('blur', params.onBlur, true);
+      }
       textInputTitle.appendChild(document.createTextNode(params.title));
       textInputWrapper.appendChild(textInputTitle);
       if (params.helpMsg) {
@@ -175,6 +182,23 @@
       alertWrapper.appendChild(alertTitle);
       alertWrapper.appendChild(document.createTextNode(params.msg));
       return alertWrapper;
+    }
+
+    function createFieldset(params) {
+      const fieldset = document.createElement('fieldset');
+
+      if (params.fields) {
+        params.fields.forEach((field) => {
+          fieldset.appendChild(field);
+        });
+      }
+      if (params.disabled) {
+        fieldset.setAttribute('disabled', '');
+      }
+      if (params.id) {
+        fieldset.setAttribute('id', params.id);
+      }
+      return fieldset;
     }
 
     //
@@ -311,39 +335,61 @@
 
     function displayCreateTreeFamily() {
       const subSection = create('subSection', { title: 'Create tree family', id: 'create-tree-family' });
-      const treeFamilyNameInput = create('textInput', { title: 'Tree family\'s name', helpMsg: 'Name' });
+      const treeFamilyNameInput = create('textInput', { title: 'Tree family\'s name', helpMsg: 'Name', id: 'name-input', onBlur: onFamilyNameInputBlur });
+      const nameValidationStatus = create('alert', { status: 'info', title: 'Validation status:', msg: 'You must enter a name', id: 'name-validation-status' });
       const treeFileInput = create('fileInput', { title: 'First family\'s tree (xml)', id: 'upload-input' });
-      const validationStatus = create('alert', { status: 'info', title: 'Validation status:', msg: 'You must select a file', id: 'validation-status' });
-      const validationBtn = create('button', { class_: 'btn-primary', text: 'Create tree family' });
+      const fileValidationStatus = create('alert', { status: 'info', title: 'Validation status:', msg: 'You must select a file', id: 'file-validation-status' });
+      const fieldset = create('fieldset', { disabled: true, id: 'submit-fieldset' });
+      const submitBtn = create('button', { class_: 'btn-primary', text: 'Submit', id: 'submit-btn' });
 
       clearPage();
       displayPageTitle();
       displaySubSection(subSection);
       subSection.appendChild(treeFamilyNameInput);
+      subSection.appendChild(nameValidationStatus);
       subSection.appendChild(treeFileInput);
-      subSection.appendChild(validationStatus);
-      subSection.appendChild(validationBtn);
+      subSection.appendChild(fileValidationStatus);
+      fieldset.appendChild(submitBtn);
+      subSection.appendChild(fieldset);
 
-      // Listen on 'upload-input' button
       siofu.listenOnInput(document.getElementById('upload-input'));
+      siofu.addEventListener('start', onNewFamilyFileUploadStart);
+      siofu.addEventListener('progress', onNewFamilyFileUploadProgess);
+      siofu.addEventListener('complete', onNewFamilyFileUploadComplete);
+      document.getElementById('submit-btn').addEventListener('click', submitNewFamilyClicked, false);
+    }
 
-      // Do something just before upload starts:
-      siofu.addEventListener('start', (event) => {
-          event.file.meta.clientId = state.clientId;
-      });
+    function replaceAlert(id, newAlert) {
+      const currentAlert = document.getElementById(id);
 
-      // Do something on upload progress:
-      siofu.addEventListener('progress', (event) => {
-        const percent = event.bytesLoaded / event.file.size * 100;
-        console.log('File is', percent.toFixed(2), 'percent loaded');
-      });
+      currentAlert.setAttribute('class', newAlert.getAttribute('class'));
+      setInnerContent(id, newAlert.innerHTML);
+    }
 
-      // Do something when a file is uploaded:
-      siofu.addEventListener('complete', (event) => {
-        console.log('upload success:', event.success);
-        console.log(event.file);
-      });
+    function updateFieldsetState(id, disabled) {
+      const fieldset = document.getElementById(id);
 
+      if (disabled) {
+        fieldset.setAttribute('disabled', '');
+      } else {
+        fieldset.removeAttribute('disabled');
+      }
+    }
+
+    function displayNewFamilyNameValidationStatus(status, message) {
+      const alertStatus = status === 'success' ? status : 'danger';
+      const validationStatus = create('alert', { status: alertStatus, title: 'Validation status:', msg: message, id: 'name-validation-status' });
+
+      replaceAlert('name-validation-status', validationStatus);
+      updateFieldsetState('submit-fieldset', !(state.nameValidated && state.fileValidated));
+    }
+
+    function displayNewFamilyFileValidationStatus(status, message) {
+      const alertStatus = status === 'success' ? status : (status === 'failure' ? 'danger' : status);
+      const validationStatus = create('alert', { status: alertStatus, title: 'Validation status:', msg: message, id: 'file-validation-status' });
+
+      replaceAlert('file-validation-status', validationStatus);
+      updateFieldsetState('submit-fieldset', !(state.nameValidated && state.fileValidated));
     }
 
     function displayUpdateTreeFamily() {
@@ -399,6 +445,37 @@
 
     function deleteTreeClicked(data) {
       console.log('deleteTreeClicked', data.target.tree);
+    }
+
+    function onFamilyNameInputBlur(data) {
+      const name = data.target.value;
+
+      console.log('user leaved tree family name input field with value:', name);
+      retrieveNewFamilyNameValidation(name);
+    }
+
+    function onNewFamilyFileUploadStart(data) {
+      data.file.meta.clientId = state.clientId;
+    }
+
+    function onNewFamilyFileUploadProgess(data) {
+      const percent = data.bytesLoaded / data.file.size * 100;
+      console.log('File is', percent.toFixed(2), 'percent loaded');
+      displayNewFamilyFileValidationStatus('info', `On going upload ${percent.toFixed(2)}%...`);
+    }
+
+    function onNewFamilyFileUploadComplete(data) {
+      console.log('upload success:', data.success);
+      console.log(data.file);
+      if (data.success) {
+        retrieveNewFamilyFileValidation(data.file);
+      } else {
+        displayNewFamilyFileValidationStatus('failure', 'Unknown error occured during upload');
+      }
+    }
+
+    function submitNewFamilyClicked() {
+      retrieveNewFamilySubmissionStatus();
     }
 
     //
@@ -461,6 +538,71 @@
         }
       });
       socket.emit(eventName, { id: tree.id });
+    }
+
+    function retrieveNewFamilyNameValidation(name) {
+      const eventName = 'validate-new-tree-family-name';
+
+      console.log('retrieveNewFamilyNameValidation', name);
+      socket.once(`${eventName}-response`, (response) => {
+        state.nameValidated = false;
+        if (response && response.status) {
+          if (response.status === 'success' && response.message) {
+            state.nameValidated = true;
+            displayNewFamilyNameValidationStatus(response.status, response.message);
+          } else if (response.status === 'failure' && response.message) {
+            displayNewFamilyNameValidationStatus(response.status, response.message);
+          } else {
+            displayNewFamilyNameValidationStatus('failure', 'unknown error');
+          }
+        } else {
+          displayNewFamilyNameValidationStatus('failure', 'unknown error');
+        }
+      });
+      socket.emit(eventName, { clientId: state.clientId, name });
+    }
+
+    function retrieveNewFamilyFileValidation(file) {
+      const eventName = 'validate-new-tree-data';
+
+      console.log('retrieveNewFamilyFileValidation', file);
+      socket.once(`${eventName}-response`, (response) => {
+        state.fileValidated = false;
+        if (response && response.status) {
+          if (response.status === 'success' && response.message) {
+            state.fileValidated = true;
+            displayNewFamilyFileValidationStatus(response.status, response.message);
+          } else if (response.status === 'failure' && response.message) {
+            displayNewFamilyFileValidationStatus(response.status, response.message);
+          } else {
+            displayNewFamilyFileValidationStatus('failure', 'Unknown error');
+          }
+        } else {
+          displayNewFamilyFileValidationStatus('failure', 'Unknown error');
+        }
+      });
+      socket.emit(eventName, { clientId: state.clientId, fileId: file.id });
+    }
+
+    function retrieveNewFamilySubmissionStatus() {
+      const eventName = 'submit-new-tree';
+
+      console.log('retrieveNewFamilySubmissionStatus');
+      socket.once(`${eventName}-response`, (response) => {
+
+        if (response && response.status && response.status === 'success') {
+          displayInitialPage();
+          retrieveAndDisplayTreeFamilies();
+        } else {
+          if (response && response.message) {
+            alert(response.message);
+          } else {
+            alert('Unknown error');
+          }
+        }
+
+      });
+      socket.emit(eventName, { clientId: state.clientId });
     }
 
     //

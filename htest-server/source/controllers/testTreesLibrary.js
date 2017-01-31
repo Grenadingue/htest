@@ -84,6 +84,36 @@ module.exports.deleteTreesFromIds = (parameters) => new Promise((fulfill, reject
   }
 });
 
+module.exports.validateNewTreeFamilyName = (parameters) => new Promise((fulfill, reject) => {
+  console.log('testTreesLibrary controller:\tvalidateNewTreeFamilyName()');
+  console.log(parameters);
+  if (parameters) {
+    fulfill({ message: 'fake success' });
+  } else {
+    reject({ message: 'fake error' });
+  }
+});
+
+module.exports.validateNewTreeData = (parameters) => new Promise((fulfill, reject) => {
+  console.log('testTreesLibrary controller:\tvalidateNewTreeData()');
+  console.log(parameters);
+  if (parameters) {
+    fulfill({ message: 'fake success' });
+  } else {
+    reject({ message: 'fake error' });
+  }
+});
+
+module.exports.processNewTreeSubmission = (parameters) => new Promise((fulfill, reject) => {
+  console.log('testTreesLibrary controller:\tprocessNewTreeSubmission()');
+  console.log(parameters);
+  if (parameters) {
+    fulfill({ message: 'fake success' });
+  } else {
+    reject({ message: 'fake error' });
+  }
+});
+
 module.exports.onFileUploadSuccess = fileUploader.onSaved;
 
 module.exports.onFileUploadFailure = fileUploader.onError;
