@@ -24,13 +24,14 @@ function bindEventToControllerFct(socket, inputEvent, controllerFct) {
   });
 }
 
-module.exports.init = (socket, app) => {
+module.exports.init = (socket) => {
   socket.on(guiRoutes.testTreesLibrary, () => {
-    const fileUploader = sioUploader(app);
+    const fileUploader = sioUploader.bind(socket);
+    const clientId = controller.register(socket);
 
     console.log(`testTreesLibrary router:\tclient connected to '${guiRoutes.testTreesLibrary}' web page`);
-    fileUploader.listen(socket);
 
+    socket.emit(`${guiRoutes.testTreesLibrary}-response`, { status: 'success', clientId });
     eventsAndFunctions.forEach((item) => {
       bindEventToControllerFct(socket, item.eventName, item.controllerFct);
     });
@@ -40,6 +41,7 @@ module.exports.init = (socket, app) => {
 
     socket.on('disconnect', () => {
       console.log(`testTreesLibrary router:\tclient disconnected from '${guiRoutes.testTreesLibrary}' web page\n`);
+      controller.unregister(clientId);
     });
   });
 };

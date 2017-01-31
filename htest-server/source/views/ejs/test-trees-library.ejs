@@ -23,7 +23,7 @@
 
   <!-- Bootstrap Core JavaScript -->
   <script src="js/bootstrap.min.js"></script>
-
+  <script src="/siofu/client.js"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script>
 
@@ -32,7 +32,7 @@
     //
 
     const state = { loaded: false };
-    let socket;
+    let socket, siofu;
 
     //
     //// Create and return html elements
@@ -154,6 +154,9 @@
 
       fileInputWrapper.setAttribute('class', 'form-group');
       fileInput.setAttribute('type', 'file');
+      if (params.id) {
+        fileInput.setAttribute('id', params.id);
+      }
       fileInputTitle.appendChild(document.createTextNode(params.title));
       fileInputWrapper.appendChild(fileInputTitle);
       fileInputWrapper.appendChild(fileInput);
@@ -309,9 +312,9 @@
     function displayCreateTreeFamily() {
       const subSection = create('subSection', { title: 'Create tree family', id: 'create-tree-family' });
       const treeFamilyNameInput = create('textInput', { title: 'Tree family\'s name', helpMsg: 'Name' });
-      const treeFileInput = create('fileInput', { title: 'First family\'s tree (xml)' });
+      const treeFileInput = create('fileInput', { title: 'First family\'s tree (xml)', id: 'upload-input' });
       const validationStatus = create('alert', { status: 'info', title: 'Validation status:', msg: 'You must select a file', id: 'validation-status' });
-      const validationBtn = create('button', { class_: 'btn-primary', text: 'Validate creation' });
+      const validationBtn = create('button', { class_: 'btn-primary', text: 'Create tree family' });
 
       clearPage();
       displayPageTitle();
@@ -320,6 +323,27 @@
       subSection.appendChild(treeFileInput);
       subSection.appendChild(validationStatus);
       subSection.appendChild(validationBtn);
+
+      // Listen on 'upload-input' button
+      siofu.listenOnInput(document.getElementById('upload-input'));
+
+      // Do something just before upload starts:
+      siofu.addEventListener('start', (event) => {
+          event.file.meta.clientId = state.clientId;
+      });
+
+      // Do something on upload progress:
+      siofu.addEventListener('progress', (event) => {
+        const percent = event.bytesLoaded / event.file.size * 100;
+        console.log('File is', percent.toFixed(2), 'percent loaded');
+      });
+
+      // Do something when a file is uploaded:
+      siofu.addEventListener('complete', (event) => {
+        console.log('upload success:', event.success);
+        console.log(event.file);
+      });
+
     }
 
     function displayUpdateTreeFamily() {
@@ -381,6 +405,19 @@
     //// Socket.io events emiters/handlers
     //
 
+    function retrieveAndSaveClientId() {
+      const eventName = '<%= pagePath %>';
+
+      socket.once(`${eventName}-response`, (response) => {
+        if (response && response.status === 'success') {
+          if ('clientId' in response) {
+            state.clientId = response.clientId;
+          }
+        }
+      });
+      socket.emit(eventName);
+    }
+
     function retrieveAndDisplayTreeFamilies() {
       const eventName = 'retrieve-available-trees';
 
@@ -432,13 +469,14 @@
 
     document.addEventListener('DOMContentLoaded', () => {
       socket = io(window.location.host);
-      displayInitialPage();
+      siofu = new SocketIOFileUpload(socket);
 
+      displayInitialPage();
       socket.on('connect', () => {
         console.log('connect event received');
 
+        retrieveAndSaveClientId();
         if (!state.loaded) {
-          socket.emit('<%= pagePath %>');
           retrieveAndDisplayTreeFamilies();
           state.loaded = true;
         }

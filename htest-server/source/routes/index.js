@@ -11,7 +11,7 @@ module.exports.init = (app, io) => {
   // init socket.io events
   io.on('connection', (socket) => {
     dashboard.init(socket);
-    testTreesLibrary.init(socket, app);
+    testTreesLibrary.init(socket);
     testProceduresLibrary.init(socket);
     machinesTests.init(socket);
   });

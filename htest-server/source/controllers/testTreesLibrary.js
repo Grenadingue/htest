@@ -1,4 +1,5 @@
 const fileUploader = require('../managers/fileUploader');
+const sioClients = require('../managers/sioClients');
 
 const lolDatabase = {
   trees: [
@@ -86,3 +87,7 @@ module.exports.deleteTreesFromIds = (parameters) => new Promise((fulfill, reject
 module.exports.onFileUploadSuccess = fileUploader.onSaved;
 
 module.exports.onFileUploadFailure = fileUploader.onError;
+
+module.exports.register = sioClients.register;
+
+module.exports.unregister = sioClients.unregister;

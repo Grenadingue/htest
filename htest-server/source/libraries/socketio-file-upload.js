@@ -3,22 +3,20 @@ const Siofu = require('socketio-file-upload');
 const mkdirp = require('mkdirp');
 const fs = require('fs');
 
-let siofuIsBindedWithExpress = false;
-
 if (!fs.existsSync(uploadDirectory) && !mkdirp.sync(uploadDirectory)) {
   console.log(`Unable to find and create upload directory '${uploadDirectory}'`);
   console.log('Exiting process...');
   process.exit(1);
 }
 
-module.exports = (app) => {
-  const uploader = new Siofu();
+module.exports.init = (app) => {
+  app.use(Siofu.router);
+};
 
-  if (!siofuIsBindedWithExpress) {
-    app.use(Siofu.router);
-    siofuIsBindedWithExpress = true;
-  }
+module.exports.bind = (socket) => {
+  const sioUploader = new Siofu();
 
-  uploader.dir = uploadDirectory;
-  return uploader;
+  sioUploader.dir = uploadDirectory;
+  sioUploader.listen(socket);
+  return sioUploader;
 };
