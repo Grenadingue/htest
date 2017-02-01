@@ -22,209 +22,26 @@
   <script src="js/jquery.js"></script>
 
   <!-- Bootstrap Core JavaScript -->
-  <script src="js/bootstrap.min.js"></script>
+  <script src="/js/bootstrap.min.js"></script>
   <script src="/siofu/client.js"></script>
   <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/components.js"></script>
+  <script src="/js/components-displayers.js"></script>
   <script>
 
     //
-    //// GUI states and properties
+    // GUI states and properties
     //
 
-    const state = { loaded: false };
     let socket, siofu;
+    const state = {
+      pageTitle: '<%= pageTitle %>',
+      loaded: false,
+    };
 
     //
-    //// Create and return html elements
+    // Display/clear html elements into/from GUI
     //
-
-    function create(element, parameters) {
-      const createFunctions = {
-        button: createButton,
-        table: createTable,
-        pageTitle: createPageTitle,
-        subSection: createSubSection,
-        textInput: createTextInput,
-        fileInput: createFileInput,
-        alert: createAlert,
-        fieldset: createFieldset,
-      };
-
-      if (createFunctions[element]) {
-        return createFunctions[element](parameters);
-      }
-      return null;
-    }
-
-    function createButton(params) {
-      const button = document.createElement('button');
-
-      button.setAttribute('type', 'button');
-      button.setAttribute('class', params.class_);
-      if (params.id) {
-        button.setAttribute('id', params.id);
-      }
-      button.appendChild(document.createTextNode(params.text));
-      button.addEventListener('click', params.onClick, false);
-      return button;
-    }
-
-    function createTable(params) {
-      const table = document.createElement('table');
-      const tableHead = document.createElement('thead');
-      const headItems = document.createElement('tr');
-      const tableBody = document.createElement('tbody');
-      let item;
-
-      table.setAttribute('class', 'table table-hover');
-
-      // table head
-      params.tableHeadContent.forEach((cell) => {
-        item = document.createElement('th');
-        item.appendChild(document.createTextNode(cell));
-        headItems.appendChild(item);
-      });
-      tableHead.appendChild(headItems);
-      table.appendChild(tableHead);
-
-      // table body
-      params.tableContent.forEach((line) => {
-        const tableLine = document.createElement('tr');
-        line.forEach((cell) => {
-          item = document.createElement('td');
-          item.appendChild(cell);
-          tableLine.appendChild(item);
-        });
-        tableBody.appendChild(tableLine);
-      });
-      table.appendChild(tableBody);
-      return table;
-    }
-
-    function createPageTitle(params) {
-      const titleWrapper1 = document.createElement('div');
-      const titleWrapper2 = document.createElement('div');
-      const titleWrapper3 = document.createElement('h1');
-      const title = params.title ? params.title : '<%= pageTitle %>';
-
-      titleWrapper1.setAttribute('class', 'row');
-      titleWrapper2.setAttribute('class', 'col-lg-12');
-      titleWrapper3.setAttribute('class', 'page-header');
-      titleWrapper3.appendChild(document.createTextNode(title));
-      titleWrapper2.appendChild(titleWrapper3);
-      titleWrapper1.appendChild(titleWrapper2);
-      return titleWrapper1;
-    }
-
-    function createSubSection(params) {
-      const sectionWrapper = document.createElement('div');
-      const titleWrapper = document.createElement('div');
-      const title = document.createElement('h2');
-
-      title.appendChild(document.createTextNode(params.title));
-      titleWrapper.setAttribute('class', 'page-header');
-      sectionWrapper.setAttribute('class', 'table-responsive');
-      if (params.id) {
-        sectionWrapper.setAttribute('id', params.id);
-      }
-      titleWrapper.appendChild(title);
-      sectionWrapper.appendChild(titleWrapper);
-      return sectionWrapper;
-    }
-
-    function createTextInput(params) {
-      const textInputWrapper = document.createElement('div');
-      const textInputTitle = document.createElement('label');
-      const textInput = document.createElement('input');
-
-      textInputWrapper.setAttribute('class', 'form-group');
-      textInput.setAttribute('class', 'form-control');
-      if (params.id) {
-        textInput.setAttribute('id', params.id);
-      }
-      if (params.onBlur) {
-        textInput.addEventListener('blur', params.onBlur, true);
-      }
-      textInputTitle.appendChild(document.createTextNode(params.title));
-      textInputWrapper.appendChild(textInputTitle);
-      if (params.helpMsg) {
-        textInput.setAttribute('placeholder', params.helpMsg);
-      }
-      textInputWrapper.appendChild(textInput);
-      return textInputWrapper;
-    }
-
-    function createFileInput(params) {
-      const fileInputWrapper = document.createElement('div');
-      const fileInputTitle = document.createElement('label');
-      const fileInput = document.createElement('input');
-
-      fileInputWrapper.setAttribute('class', 'form-group');
-      fileInput.setAttribute('type', 'file');
-      if (params.id) {
-        fileInput.setAttribute('id', params.id);
-      }
-      fileInputTitle.appendChild(document.createTextNode(params.title));
-      fileInputWrapper.appendChild(fileInputTitle);
-      fileInputWrapper.appendChild(fileInput);
-      return fileInputWrapper;
-    }
-
-    function createAlert(params) {
-      const alertWrapper = document.createElement('div');
-      const alertTitle = document.createElement('strong');
-
-      alertWrapper.setAttribute('class', `alert alert-${params.status}`);
-      if (params.id) {
-        alertWrapper.setAttribute('id', params.id);
-      }
-      alertTitle.appendChild(document.createTextNode(`${params.title} `));
-      alertWrapper.appendChild(alertTitle);
-      alertWrapper.appendChild(document.createTextNode(params.msg));
-      return alertWrapper;
-    }
-
-    function createFieldset(params) {
-      const fieldset = document.createElement('fieldset');
-
-      if (params.fields) {
-        params.fields.forEach((field) => {
-          fieldset.appendChild(field);
-        });
-      }
-      if (params.disabled) {
-        fieldset.setAttribute('disabled', '');
-      }
-      if (params.id) {
-        fieldset.setAttribute('id', params.id);
-      }
-      return fieldset;
-    }
-
-    //
-    //// Display/clear html elements into/from GUI
-    //
-
-    function setInnerContent(id, content) {
-      document.getElementById(id).innerHTML = content;
-    }
-
-    function clearPage() {
-      setInnerContent('page-wrapper-fluid', '');
-    }
-
-    function displayPageTitle(inputTitle) {
-      const pageWrapper = document.getElementById('page-wrapper-fluid');
-      const pageTitle = create('pageTitle', { title: inputTitle });
-
-      pageWrapper.appendChild(pageTitle);
-    }
-
-    function displaySubSection(subSection) {
-      const pageWrapper = document.getElementById('page-wrapper-fluid');
-
-      pageWrapper.appendChild(subSection);
-    }
 
     function displayTreeFamiliesTable(data) {
       const pageWrapper = document.getElementById('page-wrapper-fluid');
@@ -248,15 +65,15 @@
           tableLine.push(document.createTextNode(cellContent));
         });
         let button;
-        button = create('button', { id: null, class_: 'btn btn-sm btn-primary', text: 'View', onClick: retrieveAndDisplayTreeFamily });
+        button = create('button', { id: null, class: 'btn btn-sm btn-primary', text: 'View', onClick: retrieveAndDisplayTreeFamily });
         button.treeFamily = line;
         tableLine.push(button);
 
-        button = create('button', { id: null, class_: 'btn btn-sm btn-success', text: 'Update', onClick: updateTreeFamilyClicked });
+        button = create('button', { id: null, class: 'btn btn-sm btn-success', text: 'Update', onClick: updateTreeFamilyClicked });
         button.treeFamily = line;
         tableLine.push(button);
 
-        button = create('button', { id: null, class_: 'btn btn-sm btn-danger', text: 'Delete', onClick: deleteTreeFamilyClicked });
+        button = create('button', { id: null, class: 'btn btn-sm btn-danger', text: 'Delete', onClick: deleteTreeFamilyClicked });
         button.treeFamily = line;
         tableLine.push(button);
 
@@ -272,10 +89,10 @@
     // displayTreeFamiliesPage without displayTreeFamiliesTable
     function displayInitialPage() {
       const pageWrapper = document.getElementById('page-wrapper-fluid');
-      const createTreeFamilyBtn = create('button', { id: null, class_: 'btn btn-primary', text: 'Create tree family', onClick: createTreeFamilyClicked });
+      const createTreeFamilyBtn = create('button', { id: null, class: 'btn btn-primary', text: 'Create tree family', onClick: createTreeFamilyClicked });
 
       clearPage();
-      displayPageTitle();
+      displayPageTitle(state.pageTitle);
       pageWrapper.appendChild(createTreeFamilyBtn);
     }
 
@@ -286,7 +103,7 @@
       const tableContent = [];
 
       clearPage();
-      displayPageTitle();
+      displayPageTitle(state.pageTitle);
       displaySubSection(tableResponsive);
 
       Object.keys(data.trees[0]).forEach((itemKey) => {
@@ -302,11 +119,11 @@
           tableLine.push(document.createTextNode(cellContent));
         });
         let button;
-        button = create('button', { id: null, class_: 'btn btn-sm btn-primary', text: 'View', onClick: viewTreeClicked });
+        button = create('button', { id: null, class: 'btn btn-sm btn-primary', text: 'View', onClick: viewTreeClicked });
         button.tree = line;
         tableLine.push(button);
 
-        button = create('button', { id: null, class_: 'btn btn-sm btn-danger', text: 'Delete', onClick: deleteTreeClicked });
+        button = create('button', { id: null, class: 'btn btn-sm btn-danger', text: 'Delete', onClick: deleteTreeClicked });
         button.tree = line;
         tableLine.push(button);
 
@@ -324,7 +141,7 @@
       const treeViewer = document.createElement('p');
 
       clearPage();
-      displayPageTitle();
+      displayPageTitle(state.pageTitle);
       displaySubSection(subSection);
       treeViewer.appendChild(document.createTextNode('(Non rendered XML tree)'));
       treeViewer.appendChild(document.createElement('br'));
@@ -340,10 +157,10 @@
       const treeFileInput = create('fileInput', { title: 'First family\'s tree (xml)', id: 'upload-input' });
       const fileValidationStatus = create('alert', { status: 'info', title: 'Validation status:', msg: 'You must select a file', id: 'file-validation-status' });
       const fieldset = create('fieldset', { disabled: true, id: 'submit-fieldset' });
-      const submitBtn = create('button', { class_: 'btn-primary', text: 'Submit', id: 'submit-btn' });
+      const submitBtn = create('button', { class: 'btn-primary', text: 'Submit', id: 'submit-btn' });
 
       clearPage();
-      displayPageTitle();
+      displayPageTitle(state.pageTitle);
       displaySubSection(subSection);
       subSection.appendChild(treeFamilyNameInput);
       subSection.appendChild(nameValidationStatus);
@@ -357,23 +174,6 @@
       siofu.addEventListener('progress', onNewFamilyFileUploadProgess);
       siofu.addEventListener('complete', onNewFamilyFileUploadComplete);
       document.getElementById('submit-btn').addEventListener('click', submitNewFamilyClicked, false);
-    }
-
-    function replaceAlert(id, newAlert) {
-      const currentAlert = document.getElementById(id);
-
-      currentAlert.setAttribute('class', newAlert.getAttribute('class'));
-      setInnerContent(id, newAlert.innerHTML);
-    }
-
-    function updateFieldsetState(id, disabled) {
-      const fieldset = document.getElementById(id);
-
-      if (disabled) {
-        fieldset.setAttribute('disabled', '');
-      } else {
-        fieldset.removeAttribute('disabled');
-      }
     }
 
     function displayNewFamilyNameValidationStatus(status, message) {
@@ -396,7 +196,7 @@
       const subSection = create('subSection', { title: 'Update tree family', id: 'update-tree-family' });
 
       clearPage();
-      displayPageTitle();
+      displayPageTitle(state.pageTitle);
       displaySubSection(subSection);
     }
 
@@ -404,7 +204,7 @@
       const subSection = create('subSection', { title: 'Create tree', id: 'create-tree' });
 
       clearPage();
-      displayPageTitle();
+      displayPageTitle(state.pageTitle);
       displaySubSection(subSection);
     }
 
@@ -412,12 +212,12 @@
       const subSection = create('subSection', { title: 'Update tree', id: 'update-tree' });
 
       clearPage();
-      displayPageTitle();
+      displayPageTitle(state.pageTitle);
       displaySubSection(subSection);
     }
 
     //
-    //// Native page's events
+    // Native page's events
     //
 
     function createTreeFamilyClicked() {
@@ -479,7 +279,7 @@
     }
 
     //
-    //// Socket.io events emiters/handlers
+    // Socket.io events emiters/handlers
     //
 
     function retrieveAndSaveClientId() {
@@ -606,7 +406,7 @@
     }
 
     //
-    //// On web page loaded
+    // On web page loaded
     //
 
     document.addEventListener('DOMContentLoaded', () => {
