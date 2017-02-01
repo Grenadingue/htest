@@ -194,12 +194,116 @@
       updateFieldsetState('submit-fieldset', !(state.nameValidated && state.fileValidated));
     }
 
-    function displayUpdateTreeFamily() {
-      const subSection = create('subSection', { title: 'Update tree family', id: 'update-tree-family' });
+    function displayUpdateTreeFamily(treeFamily) {
+      const pageWrapper = document.getElementById('page-wrapper-fluid');
+      const selectSubSection = create('subSection', { title: 'Select tree family', id: 'update-tree-family' });
+      const parentSelector = create('listSelector', { title: 'Select parent', list: [{ id: 'parent-selector-0', name: 'None' }], id: 'parent-selector', onChange: onTreeFamiliesSelectorChange });
+      const parentVersionFieldset = create('fieldset', { disabled: true, id: 'parent-version-fieldset' });
+      const parentVersionSelector = create('listSelector', { title: 'Select parent version', list: [{ id: 'parent-version-selector-0', name: 'None' }], id: 'parent-version-selector', onChange: onTreeFamilyVersionSelectorChange });
+      const downloadFieldset = create('fieldset', { disabled: true, id: 'download-fieldset' });
+      const downloadBtn = create('button', { class: 'btn btn-default', text: 'Download parent\'s tree', id: 'download-btn' });
+      const updateSectionFieldset = create('fieldset', { disabled: true, id: 'update-section-fieldset' });
+      const updateSubSection = create('subSection', { title: 'Update tree family' });
+      const versionFieldset = create('fieldset', { disabled: true, id: 'version-fieldset' });
+      const versionInfo = create('textInput', { title: 'Next version (generated)', value: 'Unknown', id: 'generated-version-field' });
+      const treeFileInput = create('fileInput', { title: 'New tree (xml)', id: 'upload-input' });
+      const fileValidationStatus = create('alert', { status: 'info', title: 'Validation status:', msg: 'You must select a file', id: 'file-validation-status' });
+      const submitFieldset = create('fieldset', { disabled: true, id: 'submit-fieldset' });
+      const submitBtn = create('button', { class: 'btn btn-primary', text: 'Submit', id: 'submit-btn' });
 
       clearPage();
       displayPageTitle(state.pageTitle);
-      displaySubSection(subSection);
+      displaySubSection(selectSubSection);
+      // select section
+      selectSubSection.appendChild(parentSelector);
+      parentVersionFieldset.appendChild(parentVersionSelector);
+      selectSubSection.appendChild(parentVersionFieldset);
+      downloadFieldset.appendChild(downloadBtn);
+      selectSubSection.appendChild(downloadFieldset);
+      // update section
+      updateSectionFieldset.appendChild(updateSubSection);
+      versionFieldset.appendChild(versionInfo);
+      updateSubSection.appendChild(versionFieldset);
+      updateSubSection.appendChild(treeFileInput);
+      updateSubSection.appendChild(fileValidationStatus);
+      submitFieldset.appendChild(submitBtn);
+      updateSubSection.appendChild(submitFieldset);
+      pageWrapper.appendChild(updateSectionFieldset);
+
+      retrieveAndDisplayTreeFamiliesSelector(treeFamily);
+    }
+
+    function displayTreeFamiliesSelector(treeFamilies, preSelect) {
+      const selectorList = [{ id: 'parent-selector-0', name: 'None' }];
+      let selectedValue, i = 1;
+
+      treeFamilies.forEach((treeFamily) => {
+        if (preSelect !== undefined && treeFamily.name === preSelect.name) {
+          selectedValue = i;
+        }
+        selectorList.push({ id: `parent-selector-${treeFamily.rootId}`, name: treeFamily.name });
+        i += 1;
+      });
+
+      const selector = create('listSelector', { title: 'Select parent', list: selectorList, preSelect: selectedValue, id: 'parent-selector', onChange: onTreeFamiliesSelectorChange });
+      replaceSelector('parent-selector', selector);
+
+      if (selectedValue !== undefined && preSelect) {
+        retrieveAndDisplayTreeFamilyVersionsSelector(preSelect.rootId);
+      }
+    }
+
+    function displayTreeFamiliesSelectorChange(selector) {
+      const rootId = selector.options[selector.selectedIndex].id.split('-')[2];
+      const generatedVersionField = document.getElementById('generated-version-field');
+
+      console.log('value:', selector.options[selector.selectedIndex].value, '| rootId:', rootId);
+      generatedVersionField.value = 'Unknown';
+      if (selector.selectedIndex !== 0) {
+        retrieveAndDisplayTreeFamilyVersionsSelector(rootId);
+      } else {
+        const newSelector = create('listSelector', { title: 'Select parent version', list: [{ id: 'parent-version-0', name: 'None' }], id: 'parent-version-selector', onChange: onTreeFamilyVersionSelectorChange });
+
+        replaceSelector('parent-version-selector', newSelector);
+        updateFieldsetState('parent-version-fieldset', true);
+        updateFieldsetState('download-fieldset', true);
+        updateFieldsetState('update-section-fieldset', true);
+      }
+    }
+
+    function displayTreeFamilyVersionSelectorChanges(selector) {
+      const id = selector.options[selector.selectedIndex].id.split('-')[3];
+      const generatedVersionField = document.getElementById('generated-version-field');
+
+      console.log('value:', selector.options[selector.selectedIndex].value, '| id:', id);
+      if (selector.selectedIndex !== 0) {
+        let newVersion = 0;
+
+        selector.treeFamily.trees.forEach((tree) => {
+          newVersion = tree.version > newVersion ? tree.version : newVersion;
+        });
+        newVersion += 1;
+        generatedVersionField.value = `v${newVersion}`;
+        updateFieldsetState('download-fieldset', false);
+        updateFieldsetState('update-section-fieldset', false);
+      } else {
+        generatedVersionField.value = 'Unknown';
+        updateFieldsetState('download-fieldset', true);
+        updateFieldsetState('update-section-fieldset', true);
+      }
+    }
+
+    function displayTreeFamilyVersionsSelectorChanges(treeFamily) {
+      const selectorList = [{ id: 'parent-version-selector-0', name: 'None' }];
+
+      treeFamily.trees.forEach((tree) => {
+        selectorList.push({ id: `parent-version-selector-${tree.id}`, name: `v${tree.version}` });
+      });
+
+      let selector = create('listSelector', { title: 'Select parent version', list: selectorList, id: 'parent-version-selector' });
+      selector = replaceSelector('parent-version-selector', selector);
+      selector.treeFamily = treeFamily;
+      updateFieldsetState('parent-version-fieldset', false);
     }
 
     function displayCreateTree() {
@@ -278,6 +382,14 @@
 
     function submitNewFamilyClicked() {
       retrieveNewFamilySubmissionStatus();
+    }
+
+    function onTreeFamiliesSelectorChange(data) {
+      displayTreeFamiliesSelectorChange(data.target);
+    }
+
+    function onTreeFamilyVersionSelectorChange(data) {
+      displayTreeFamilyVersionSelectorChanges(data.target);
     }
 
     //
@@ -403,6 +515,34 @@
         }
       });
       socket.emit(eventName, { clientId: state.clientId });
+    }
+
+    function retrieveAndDisplayTreeFamiliesSelector(treeFamily) {
+      const eventName = 'retrieve-available-trees';
+
+      socket.once(`${eventName}-response`, (response) => {
+        console.log('retrieveAndDisplayTreeFamiliesSelector: successfull response received', response);
+        if (response && response.status === 'success') {
+          if (response.trees) {
+            displayTreeFamiliesSelector(response.trees, treeFamily);
+          }
+        }
+      });
+      socket.emit(eventName);
+    }
+
+    function retrieveAndDisplayTreeFamilyVersionsSelector(rootId) {
+      const eventName = 'retrieve-trees-from-root-id';
+
+      socket.once(`${eventName}-response`, (response) => {
+        if (response && response.status === 'success') {
+          console.log('retrieveAndDisplayTreeFamilyVersionsSelector: successfull response received', response);
+          if (('trees' in response) && response.rootId === rootId) {
+            displayTreeFamilyVersionsSelectorChanges(response);
+          }
+        }
+      });
+      socket.emit(eventName, { id: rootId });
     }
 
     //

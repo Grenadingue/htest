@@ -5,11 +5,14 @@
 /* eslint-disable no-unused-vars, no-undef */
 
 function setInnerContent(id, content) {
-  document.getElementById(id).innerHTML = content;
+  const element = document.getElementById(id);
+
+  element.innerHTML = content;
+  return element;
 }
 
 function clearPage() {
-  setInnerContent('page-wrapper-fluid', '');
+  return setInnerContent('page-wrapper-fluid', '');
 }
 
 function displayPageTitle(inputTitle) {
@@ -29,7 +32,13 @@ function replaceAlert(id, newAlert) {
   const currentAlert = document.getElementById(id);
 
   currentAlert.setAttribute('class', newAlert.getAttribute('class'));
-  setInnerContent(id, newAlert.innerHTML);
+  return setInnerContent(id, newAlert.innerHTML);
+}
+
+function replaceSelector(id, newSelector) {
+  const currentSelector = document.getElementById(id);
+
+  return setInnerContent(id, newSelector.innerHTML);
 }
 
 function updateFieldsetState(id, disabled) {

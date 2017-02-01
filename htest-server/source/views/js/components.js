@@ -95,6 +95,9 @@ function createTextInput(params) {
   if (params.helpMsg) {
     textInput.setAttribute('placeholder', params.helpMsg);
   }
+  if (params.value) {
+    textInput.value = params.value;
+  }
   textInputWrapper.appendChild(textInput);
   return textInputWrapper;
 }
@@ -146,6 +149,36 @@ function createFieldset(params) {
   return fieldset;
 }
 
+function createListSelector(params) {
+  const formWrapper = document.createElement('div');
+  const selectorLabel = document.createElement('label');
+  const selector = document.createElement('select');
+  let i = 0;
+
+  formWrapper.setAttribute('class', 'form-group');
+  selectorLabel.appendChild(document.createTextNode(params.title));
+  selector.setAttribute('class', 'form-control');
+  if (params.id) {
+    selector.setAttribute('id', params.id);
+  }
+  if (params.onChange) {
+    selector.addEventListener('change', params.onChange, false);
+  }
+  params.list.forEach((item) => {
+    const optionItem = document.createElement('option');
+    optionItem.appendChild(document.createTextNode(item.name));
+    optionItem.setAttribute('id', item.id);
+    if (i === params.preSelect) {
+      optionItem.setAttribute('selected', 'preselected');
+    }
+    selector.appendChild(optionItem);
+    i += 1;
+  });
+  formWrapper.appendChild(selectorLabel);
+  formWrapper.appendChild(selector);
+  return formWrapper;
+}
+
 function create(element, parameters) { // eslint-disable-line no-unused-vars
   const createFunctions = {
     button: createButton,
@@ -156,6 +189,7 @@ function create(element, parameters) { // eslint-disable-line no-unused-vars
     fileInput: createFileInput,
     alert: createAlert,
     fieldset: createFieldset,
+    listSelector: createListSelector,
   };
 
   if (createFunctions[element]) {
