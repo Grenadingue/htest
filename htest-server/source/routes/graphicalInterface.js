@@ -29,7 +29,7 @@ function declarePage(app, httpPath, serverPath, title) {
 }
 
 module.exports.init = (app) => {
-  app.use(express.static(path.resolve(__dirname, '../views/static')));
+  app.use(express.static(path.resolve(__dirname, '../views/sbadmin')));
   app.get('/', (req, res) => {
     res.redirect(routes.dashboard);
   });
