@@ -389,7 +389,6 @@
 
       console.log('retrieveNewFamilySubmissionStatus');
       socket.once(`${eventName}-response`, (response) => {
-
         if (response && response.status && response.status === 'success') {
           displayInitialPage();
           retrieveAndDisplayTreeFamilies();
@@ -400,7 +399,6 @@
             alert('Unknown error');
           }
         }
-
       });
       socket.emit(eventName, { clientId: state.clientId });
     }
