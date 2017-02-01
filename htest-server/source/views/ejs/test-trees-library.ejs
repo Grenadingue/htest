@@ -65,11 +65,11 @@
           tableLine.push(document.createTextNode(cellContent));
         });
         let button;
-        button = create('button', { id: null, class: 'btn btn-sm btn-primary', text: 'View', onClick: retrieveAndDisplayTreeFamily });
+        button = create('button', { id: null, class: 'btn btn-sm btn-success', text: 'View', onClick: retrieveAndDisplayTreeFamily });
         button.treeFamily = line;
         tableLine.push(button);
 
-        button = create('button', { id: null, class: 'btn btn-sm btn-success', text: 'Update', onClick: updateTreeFamilyClicked });
+        button = create('button', { id: null, class: 'btn btn-sm btn-primary', text: 'Update', onClick: updateTreeFamilyClicked });
         button.treeFamily = line;
         tableLine.push(button);
 
@@ -98,12 +98,14 @@
 
     function displayTreeFamily(data) {
       const pageWrapper = document.getElementById('page-wrapper-fluid');
-      const tableResponsive = create('subSection', { title: data.trees[0].name, id: 'tree-family-table' });
+      const createTreeBtn = create('button', { id: null, class: 'btn btn-primary', text: 'Add tree version', onClick: updateTreeFamilyClicked });
+      const tableResponsive = create('subSection', { title: `"${data.trees[0].name}" family` , id: 'tree-family-table' });
       const tableHeadContent = [];
       const tableContent = [];
 
       clearPage();
       displayPageTitle(state.pageTitle);
+      pageWrapper.appendChild(createTreeBtn);
       displaySubSection(tableResponsive);
 
       Object.keys(data.trees[0]).forEach((itemKey) => {
@@ -119,7 +121,7 @@
           tableLine.push(document.createTextNode(cellContent));
         });
         let button;
-        button = create('button', { id: null, class: 'btn btn-sm btn-primary', text: 'View', onClick: viewTreeClicked });
+        button = create('button', { id: null, class: 'btn btn-sm btn-success', text: 'View', onClick: viewTreeClicked });
         button.tree = line;
         tableLine.push(button);
 
@@ -137,7 +139,7 @@
     }
 
     function displayTree(tree) {
-      const subSection = create('subSection', { title: `${tree.name} (v${tree.version})`, id: 'tree-viewer' });
+      const subSection = create('subSection', { title: `"${tree.name}" v${tree.version}`, id: 'tree-viewer' });
       const treeViewer = document.createElement('p');
 
       clearPage();
@@ -157,7 +159,7 @@
       const treeFileInput = create('fileInput', { title: 'First family\'s tree (xml)', id: 'upload-input' });
       const fileValidationStatus = create('alert', { status: 'info', title: 'Validation status:', msg: 'You must select a file', id: 'file-validation-status' });
       const fieldset = create('fieldset', { disabled: true, id: 'submit-fieldset' });
-      const submitBtn = create('button', { class: 'btn-primary', text: 'Submit', id: 'submit-btn' });
+      const submitBtn = create('button', { class: 'btn btn-primary', text: 'Submit', id: 'submit-btn' });
 
       clearPage();
       displayPageTitle(state.pageTitle);
