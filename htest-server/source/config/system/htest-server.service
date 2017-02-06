@@ -1,0 +1,14 @@
+[Unit]
+Description=Hardware tester web server
+Requires=network.target
+Requires=mysql.service
+After=network.target
+After=mysql.service
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=/usr/bin/node /usr/share/htest-server/index.js
+
+[Install]
+WantedBy=multi-user.target
