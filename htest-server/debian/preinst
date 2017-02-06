@@ -1,0 +1,11 @@
+pkgname="htest-server"
+configfile="base.config.json"
+
+mkdir -p "/etc/$pkgname"
+
+if [ -f "/etc/$pkgname/$configfile" ]; then
+  echo "Saving previous configuration file..."
+  cp -L "/etc/$pkgname/$configfile" "/etc/$pkgname/$configfile.save"
+fi
+
+#DEBHELPER#

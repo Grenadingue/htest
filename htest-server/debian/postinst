@@ -1,0 +1,16 @@
+pkgname="htest-server"
+configfile="base.config.json"
+
+if [ -f "/etc/$pkgname/$configfile.save" ]; then
+  echo "Replacing bare configuration file by the previous one..."
+  mv "/etc/$pkgname/$configfile.save" "/usr/share/$pkgname/config/$configfile"
+  cp "/usr/share/$pkgname/config/$configfile.example" "/etc/$pkgname/$configfile.new"
+else
+  echo "Copying bare configuration file..."
+  cp "/usr/share/$pkgname/config/$configfile.example" "/usr/share/$pkgname/config/$configfile"
+  ln -s "/usr/share/$pkgname/config/$configfile" "/etc/$pkgname/$configfile"
+fi
+
+chmod 600 "/usr/share/${pkgname}/config/$configfile"
+
+#DEBHELPER#

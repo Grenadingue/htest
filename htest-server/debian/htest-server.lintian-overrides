@@ -1,0 +1,7 @@
+# npm's node_modules & lintian pleasures
+htest-server binary: unusual-interpreter *
+htest-server binary: script-not-executable *
+htest-server binary: wrong-path-for-interpreter *
+htest-server binary: executable-not-elf-or-script *
+htest-server binary: embedded-javascript-library *
+htest-server binary: extra-license-file *

@@ -1,0 +1,17 @@
+Source: htest-server
+Section: misc
+Priority: optional
+Maintainer: Nicolas Chauvin <nicolas@substantiel.fr>
+Build-Depends: debhelper (>= 9)
+Standards-Version: 3.9.4
+Vcs-Svn: svn+ssh://svn@substantielsvn.dyndns.org/ordissimo/sub/ordissimo/htest-server
+Vcs-Browser: https://substantielsvn.dyndns.org/ordissimo/browser/ordissimo/sub/ordissimo/htest-server
+
+Package: htest-server
+Architecture: all
+Depends: ${misc:Depends}, nodejs (>= 6), mysql-server (>= 5.5)
+Description: Hardware tester web server
+ Provide a user graphical interface, in a web browser, to a human hardware
+ tester. Manage a test trees library. Make the tester able to create test
+ procedures from test trees. Make the tester able to instanciate machine tests
+ from any generated test procedure.
