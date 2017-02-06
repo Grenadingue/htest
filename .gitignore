@@ -1,0 +1,19 @@
+# node_modules save (for build script)
+*.save
+
+# debian package generation
+*.dsc
+*.tar.gz
+*.tar.xz
+*.deb
+*.build
+*.changes
+*.debhelper.log
+*.substvars
+*.buildinfo
+debhelper-build-stamp
+files
+htest-server/debian/htest-server
+
+# emacs
+*~
