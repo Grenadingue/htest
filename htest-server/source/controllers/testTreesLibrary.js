@@ -74,8 +74,18 @@ module.exports.retrieveTreeFromId = (parameters) => new Promise((fulfill, reject
   }
 });
 
-module.exports.deleteTreesFromIds = (parameters) => new Promise((fulfill, reject) => {
-  console.log('testTreesLibrary controller:\tdeleteTreesFromIds()');
+module.exports.deleteTreesFromRootId = (parameters) => new Promise((fulfill, reject) => {
+  console.log('testTreesLibrary controller:\tdeleteTreesFromRootId()');
+  console.log(parameters);
+  if (parameters) {
+    fulfill({ data: 'fake success' });
+  } else {
+    reject({ data: 'fake error' });
+  }
+});
+
+module.exports.deleteTreeFromId = (parameters) => new Promise((fulfill, reject) => {
+  console.log('testTreesLibrary controller:\tdeleteTreeFromId()');
   console.log(parameters);
   if (parameters) {
     fulfill({ data: 'fake success' });

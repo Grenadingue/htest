@@ -65,7 +65,7 @@
           tableLine.push(document.createTextNode(cellContent));
         });
         let button;
-        button = create('button', { id: null, class: 'btn btn-sm btn-success', text: 'View', onClick: retrieveAndDisplayTreeFamily });
+        button = create('button', { id: null, class: 'btn btn-sm btn-success', text: 'View', onClick: viewTreeFamilyClicked });
         button.treeFamily = line;
         tableLine.push(button);
 
@@ -123,10 +123,12 @@
         let button;
         button = create('button', { id: null, class: 'btn btn-sm btn-success', text: 'View', onClick: viewTreeClicked });
         button.tree = line;
+        button.rootId = data.rootId;
         tableLine.push(button);
 
         button = create('button', { id: null, class: 'btn btn-sm btn-danger', text: 'Delete', onClick: deleteTreeClicked });
         button.tree = line;
+        button.rootId = data.rootId;
         tableLine.push(button);
 
         tableContent.push(tableLine);
@@ -332,7 +334,8 @@
     }
 
     function viewTreeFamilyClicked(data) {
-      console.log('user wants to view tree family', data.target.treeFamily);
+      console.log('user wants to view tree family', data.target.treeFamily.rootId);
+      retrieveAndDisplayTreeFamily(data.target.treeFamily.rootId);
     }
 
     function updateTreeFamilyClicked(data) {
@@ -342,6 +345,7 @@
 
     function deleteTreeFamilyClicked(data) {
       console.log('user wants to detete tree family', data.target.treeFamily);
+      submitTreeFamilyDeletionAndDisplayTreeFamilies(data.target.treeFamily.rootId);
     }
 
     function viewTreeClicked(data) {
@@ -351,6 +355,7 @@
 
     function deleteTreeClicked(data) {
       console.log('deleteTreeClicked', data.target.tree);
+      submitTreeDeletionAndDisplayTreeFamily(data.target.rootId, data.target.tree.id);
     }
 
     function onFamilyNameInputBlur(data) {
@@ -423,20 +428,37 @@
       socket.emit(eventName);
     }
 
-    function retrieveAndDisplayTreeFamily(data) {
+    function retrieveAndDisplayTreeFamily(rootId) {
       const eventName = 'retrieve-trees-from-root-id';
 
-      console.log('user wants to view tree family', data.target.treeFamily);
+      console.log('user wants to view tree family', rootId);
       socket.once(`${eventName}-response`, (response) => {
         if (response && response.status === 'success') {
           const trees = response.trees;
           console.log('retrieveAndDisplayTreeFamily: successfull response received', response);
-          if (trees && response.rootId === data.target.treeFamily.rootId) {
+          if (trees && response.rootId === rootId) {
             displayTreeFamily(response);
           }
         }
       });
-      socket.emit(eventName, { id: data.target.treeFamily.rootId });
+      socket.emit(eventName, { id: rootId });
+    }
+
+    function submitTreeDeletionAndDisplayTreeFamily(rootId, id) {
+      const eventName = 'delete-tree-from-id';
+
+      console.log('user wants to delete tree id', id, 'inside family rootId', rootId);
+      socket.once(`${eventName}-response`, (response) => {
+        if (response && response.status === 'success') {
+          console.log('submitTreeDeletionAndDisplayTreeFamily: successfull response received', response);
+          retrieveAndDisplayTreeFamily(rootId);
+        }
+      });
+      socket.emit(eventName, { id });
+    }
+
+    function submitTreeFamilyDeletionAndDisplayTreeFamilies(rootId) {
+      console.log(rootId);
     }
 
     function retrieveAndDisplayTree(tree) {
