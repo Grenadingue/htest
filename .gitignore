@@ -1,4 +1,5 @@
-# npm
+# node.js/npm
+node_modules
 npm-debug.log
 
 # node_modules save (for build script)
@@ -20,7 +21,11 @@ htest-server/debian/htest-server
 
 # emacs
 *~
+.*~
 .#*
 
 # autoenv github.com/kennethreitz/autoenv
 .env*
+
+# project's configuration files
+*.config.json
