@@ -15,6 +15,18 @@ function createButton(params) {
   return button;
 }
 
+function createHypertextLink(params) {
+  const hypertextLink = document.createElement('a');
+
+  hypertextLink.setAttribute('href', '#');
+  hypertextLink.setAttribute('class', params.class);
+  if (params.id) {
+    hypertextLink.setAttribute('id', params.id);
+  }
+  hypertextLink.appendChild(document.createTextNode(params.text));
+  return hypertextLink;
+}
+
 function createTable(params) {
   const table = document.createElement('table');
   const tableHead = document.createElement('thead');
@@ -182,6 +194,7 @@ function createListSelector(params) {
 function create(element, parameters) { // eslint-disable-line no-unused-vars
   const createFunctions = {
     button: createButton,
+    hypertextLink: createHypertextLink,
     table: createTable,
     pageTitle: createPageTitle,
     subSection: createSubSection,

@@ -1,5 +1,6 @@
 const fileUploader = require('../managers/fileUploader');
 const sioClients = require('../managers/sioClients');
+const path = require('path');
 
 const lolDatabase = {
   trees: [
@@ -78,9 +79,9 @@ module.exports.deleteTreesFromRootId = (parameters) => new Promise((fulfill, rej
   console.log('testTreesLibrary controller:\tdeleteTreesFromRootId()');
   console.log(parameters);
   if (parameters) {
-    fulfill({ data: 'fake success' });
+    fulfill({ message: 'fake success' });
   } else {
-    reject({ data: 'fake error' });
+    reject({ message: 'fake error' });
   }
 });
 
@@ -88,9 +89,9 @@ module.exports.deleteTreeFromId = (parameters) => new Promise((fulfill, reject) 
   console.log('testTreesLibrary controller:\tdeleteTreeFromId()');
   console.log(parameters);
   if (parameters) {
-    fulfill({ data: 'fake success' });
+    fulfill({ message: 'fake success' });
   } else {
-    reject({ data: 'fake error' });
+    reject({ message: 'fake error' });
   }
 });
 
@@ -121,6 +122,36 @@ module.exports.processNewTreeSubmission = (parameters) => new Promise((fulfill, 
     fulfill({ message: 'fake success' });
   } else {
     reject({ message: 'fake error' });
+  }
+});
+
+module.exports.validateNewTreeVersionData = (parameters) => new Promise((fulfill, reject) => {
+  console.log('testTreesLibrary controller:\tvalidateNewTreeVersionData()');
+  console.log(parameters);
+  if (parameters) {
+    fulfill({ message: 'fake success' });
+  } else {
+    reject({ message: 'fake error' });
+  }
+});
+
+module.exports.processNewTreeVersionSubmission = (parameters) => new Promise((fulfill, reject) => {
+  console.log('testTreesLibrary controller:\tprocessNewTreeVersionSubmission()');
+  console.log(parameters);
+  if (parameters) {
+    fulfill({ message: 'fake success', rootId: lolDatabase.trees[0].rootId });
+  } else {
+    reject({ message: 'fake error' });
+  }
+});
+
+module.exports.serveTreeAsFile = (parameters) => new Promise((fulfill, reject) => {
+  console.log('testTreesLibrary controller:\tserveTreeAsFile()');
+  console.log(parameters);
+  if (parameters) {
+    fulfill({ path: path.join(__dirname, '../config/base.config.json.example'), name: `tree_${parameters.id}.json` });
+  } else {
+    reject();
   }
 });
 

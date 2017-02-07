@@ -12,6 +12,8 @@ const eventsAndFunctions = [
   { eventName: 'validate-new-tree-family-name', controllerFct: controller.validateNewTreeFamilyName },
   { eventName: 'validate-new-tree-data', controllerFct: controller.validateNewTreeData },
   { eventName: 'submit-new-tree', controllerFct: controller.processNewTreeSubmission },
+  { eventName: 'validate-new-tree-version-data', controllerFct: controller.validateNewTreeVersionData },
+  { eventName: 'submit-new-tree-version', controllerFct: controller.processNewTreeVersionSubmission },
 ];
 
 function bindEventToControllerFct(socket, inputEvent, controllerFct) {
@@ -28,7 +30,15 @@ function bindEventToControllerFct(socket, inputEvent, controllerFct) {
   });
 }
 
-module.exports.init = (socket) => {
+module.exports.initHttp = (app) => {
+  app.get('/download/tree/:id', (req, res) => {
+    controller.serveTreeAsFile({ id: req.params.id })
+    .then((file) => res.download(file.path, file.name))
+    .catch(() => res.status(404).send('File not found'));
+  });
+};
+
+module.exports.initSocketIo = (socket) => {
   socket.on(guiRoutes.testTreesLibrary, () => {
     const fileUploader = sioUploader.bind(socket);
     const clientId = controller.register(socket);

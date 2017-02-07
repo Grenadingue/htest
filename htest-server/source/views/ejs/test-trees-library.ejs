@@ -105,6 +105,7 @@
 
       clearPage();
       displayPageTitle(state.pageTitle);
+      createTreeBtn.treeFamily = { rootId: data.rootId, name: `${data.trees[0].name}` };
       pageWrapper.appendChild(createTreeBtn);
       displaySubSection(tableResponsive);
 
@@ -203,7 +204,7 @@
       const parentVersionFieldset = create('fieldset', { disabled: true, id: 'parent-version-fieldset' });
       const parentVersionSelector = create('listSelector', { title: 'Select parent version', list: [{ id: 'parent-version-selector-0', name: 'None' }], id: 'parent-version-selector', onChange: onTreeFamilyVersionSelectorChange });
       const downloadFieldset = create('fieldset', { disabled: true, id: 'download-fieldset' });
-      const downloadBtn = create('button', { class: 'btn btn-default', text: 'Download parent\'s tree', id: 'download-btn' });
+      const downloadBtn = create('hypertextLink', { class: 'btn btn-default', text: 'Download parent\'s tree', id: 'download-btn' });
       const updateSectionFieldset = create('fieldset', { disabled: true, id: 'update-section-fieldset' });
       const updateSubSection = create('subSection', { title: 'Update tree family' });
       const versionFieldset = create('fieldset', { disabled: true, id: 'version-fieldset' });
@@ -231,6 +232,11 @@
       submitFieldset.appendChild(submitBtn);
       updateSubSection.appendChild(submitFieldset);
       pageWrapper.appendChild(updateSectionFieldset);
+      siofu.listenOnInput(document.getElementById('upload-input'));
+      siofu.addEventListener('start', onNewTreeVersionFileUploadStart);
+      siofu.addEventListener('progress', onNewTreeVersionFileUploadProgess);
+      siofu.addEventListener('complete', onNewTreeVersionFileUploadComplete);
+      document.getElementById('submit-btn').addEventListener('click', submitNewTreeVersionClicked, false);
 
       retrieveAndDisplayTreeFamiliesSelector(treeFamily);
     }
@@ -258,15 +264,15 @@
     function displayTreeFamiliesSelectorChange(selector) {
       const rootId = selector.options[selector.selectedIndex].id.split('-')[2];
       const generatedVersionField = document.getElementById('generated-version-field');
+      const newSelector = create('listSelector', { title: 'Select parent version', list: [{ id: 'parent-version-0', name: 'None' }], id: 'parent-version-selector', onChange: onTreeFamilyVersionSelectorChange });
 
       console.log('value:', selector.options[selector.selectedIndex].value, '| rootId:', rootId);
       generatedVersionField.value = 'Unknown';
+      document.getElementById('download-btn').setAttribute('href', '#');
+      replaceSelector('parent-version-selector', newSelector);
       if (selector.selectedIndex !== 0) {
         retrieveAndDisplayTreeFamilyVersionsSelector(rootId);
       } else {
-        const newSelector = create('listSelector', { title: 'Select parent version', list: [{ id: 'parent-version-0', name: 'None' }], id: 'parent-version-selector', onChange: onTreeFamilyVersionSelectorChange });
-
-        replaceSelector('parent-version-selector', newSelector);
         updateFieldsetState('parent-version-fieldset', true);
         updateFieldsetState('download-fieldset', true);
         updateFieldsetState('update-section-fieldset', true);
@@ -279,6 +285,7 @@
 
       console.log('value:', selector.options[selector.selectedIndex].value, '| id:', id);
       if (selector.selectedIndex !== 0) {
+        const downloadLink = `${window.location.protocol}//${window.location.host}/download/tree/${id}`
         let newVersion = 0;
 
         selector.treeFamily.trees.forEach((tree) => {
@@ -286,10 +293,12 @@
         });
         newVersion += 1;
         generatedVersionField.value = `v${newVersion}`;
+        document.getElementById('download-btn').setAttribute('href', downloadLink);
         updateFieldsetState('download-fieldset', false);
         updateFieldsetState('update-section-fieldset', false);
       } else {
         generatedVersionField.value = 'Unknown';
+        document.getElementById('download-btn').setAttribute('href', '#');
         updateFieldsetState('download-fieldset', true);
         updateFieldsetState('update-section-fieldset', true);
       }
@@ -306,6 +315,14 @@
       selector = replaceSelector('parent-version-selector', selector);
       selector.treeFamily = treeFamily;
       updateFieldsetState('parent-version-fieldset', false);
+    }
+
+    function displayNewTreeVersionFileValidationStatus(status, message) {
+      const alertStatus = status === 'success' ? status : (status === 'failure' ? 'danger' : status);
+      const validationStatus = create('alert', { status: alertStatus, title: 'Validation status:', msg: message, id: 'file-validation-status' });
+
+      replaceAlert('file-validation-status', validationStatus);
+      updateFieldsetState('submit-fieldset', !state.fileValidated);
     }
 
     function displayCreateTree() {
@@ -397,6 +414,32 @@
       displayTreeFamilyVersionSelectorChanges(data.target);
     }
 
+    function onNewTreeVersionFileUploadStart(data) {
+      data.file.meta.clientId = state.clientId;
+      console.log('onNewTreeVersionFileUploadStart');
+    }
+
+    function onNewTreeVersionFileUploadProgess(data) {
+      const percent = data.bytesLoaded / data.file.size * 100;
+      console.log('File is', percent.toFixed(2), 'percent loaded');
+      displayNewTreeVersionFileValidationStatus('info', `On going upload ${percent.toFixed(2)}%...`);
+    }
+
+    function onNewTreeVersionFileUploadComplete(data) {
+      console.log('upload success:', data.success);
+      console.log(data.file);
+      if (data.success) {
+        retrieveNewVersionFileValidation(data.file);
+      } else {
+        displayNewTreeVersionFileValidationStatus('failure', 'Unknown error occured during upload');
+      }
+    }
+
+    function submitNewTreeVersionClicked(data) {
+      console.log('submitNewTreeVersionClicked');
+      retrieveNewTreeVersionSubmissionStatus();
+    }
+
     //
     // Socket.io events emiters/handlers
     //
@@ -451,7 +494,11 @@
       socket.once(`${eventName}-response`, (response) => {
         if (response && response.status === 'success') {
           console.log('submitTreeDeletionAndDisplayTreeFamily: successfull response received', response);
-          retrieveAndDisplayTreeFamilies();
+          retrieveAndDisplayTreeFamily(rootId);
+        } else if (response && response.status === 'failure' && ('message' in response)) {
+          alert(response.message);
+        } else {
+          alert('Unknown error, please try again');
         }
       });
       socket.emit(eventName, { id });
@@ -466,6 +513,10 @@
           console.log('submitTreeFamilyDeletionAndDisplayTreeFamilies: successfull response received', response);
           displayInitialPage();
           retrieveAndDisplayTreeFamilies();
+        } else if (response && response.status === 'failure' && ('message' in response)) {
+          alert(response.message);
+        } else {
+          alert('Unknown error, please try again');
         }
       });
       socket.emit(eventName, { rootId });
@@ -536,6 +587,8 @@
       console.log('retrieveNewFamilySubmissionStatus');
       socket.once(`${eventName}-response`, (response) => {
         if (response && response.status && response.status === 'success') {
+          state.nameValidated = false;
+          state.fileValidated = false;
           displayInitialPage();
           retrieveAndDisplayTreeFamilies();
         } else {
@@ -575,6 +628,47 @@
         }
       });
       socket.emit(eventName, { id: rootId });
+    }
+
+    function retrieveNewVersionFileValidation(file) {
+      const eventName = 'validate-new-tree-version-data';
+
+      console.log('retrieveNewVersionFileValidation', file);
+      socket.once(`${eventName}-response`, (response) => {
+        state.fileValidated = false;
+        if (response && response.status) {
+          if (response.status === 'success' && response.message) {
+            state.fileValidated = true;
+            displayNewTreeVersionFileValidationStatus(response.status, response.message);
+          } else if (response.status === 'failure' && response.message) {
+            displayNewTreeVersionFileValidationStatus(response.status, response.message);
+          } else {
+            displayNewTreeVersionFileValidationStatus('failure', 'Unknown error');
+          }
+        } else {
+          displayNewTreeVersionFileValidationStatus('failure', 'Unknown error');
+        }
+      });
+      socket.emit(eventName, { clientId: state.clientId, fileId: file.id });
+    }
+
+    function retrieveNewTreeVersionSubmissionStatus() {
+      const eventName = 'submit-new-tree-version';
+
+      console.log('retrieveNewTreeVersionSubmissionStatus');
+      socket.once(`${eventName}-response`, (response) => {
+        if (response && response.status && response.status === 'success' && ('rootId' in response)) {
+          state.fileValidated = false;
+          retrieveAndDisplayTreeFamily(response.rootId);
+        } else {
+          if (response && response.message) {
+            alert(response.message);
+          } else {
+            alert('Unknown error');
+          }
+        }
+      });
+      socket.emit(eventName, { clientId: state.clientId });
     }
 
     //
