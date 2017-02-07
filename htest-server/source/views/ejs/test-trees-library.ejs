@@ -451,14 +451,24 @@
       socket.once(`${eventName}-response`, (response) => {
         if (response && response.status === 'success') {
           console.log('submitTreeDeletionAndDisplayTreeFamily: successfull response received', response);
-          retrieveAndDisplayTreeFamily(rootId);
+          retrieveAndDisplayTreeFamilies();
         }
       });
       socket.emit(eventName, { id });
     }
 
     function submitTreeFamilyDeletionAndDisplayTreeFamilies(rootId) {
-      console.log(rootId);
+      const eventName = 'delete-trees-from-root-id';
+
+      console.log('user wants to delete tree family with root id', rootId);
+      socket.once(`${eventName}-response`, (response) => {
+        if (response && response.status === 'success') {
+          console.log('submitTreeFamilyDeletionAndDisplayTreeFamilies: successfull response received', response);
+          displayInitialPage();
+          retrieveAndDisplayTreeFamilies();
+        }
+      });
+      socket.emit(eventName, { rootId });
     }
 
     function retrieveAndDisplayTree(tree) {
