@@ -3,17 +3,23 @@ const controller = require('../controllers/testTreesLibrary');
 const sioUploader = require('../libraries/socketio-file-upload');
 
 const eventsAndFunctions = [
-  { eventName: 'add-new-tree', controllerFct: controller.addNewTree },
+  // retrieve tree families
   { eventName: 'retrieve-available-trees', controllerFct: controller.retrieveAvailableTrees },
-  { eventName: 'retrieve-tree-from-id', controllerFct: controller.retrieveTreeFromId },
-  { eventName: 'retrieve-trees-from-root-id', controllerFct: controller.retrieveTreesFromRootId },
-  { eventName: 'delete-trees-from-root-id', controllerFct: controller.deleteTreesFromRootId },
-  { eventName: 'delete-tree-from-id', controllerFct: controller.deleteTreeFromId },
+  // create tree family
   { eventName: 'validate-new-tree-family-name', controllerFct: controller.validateNewTreeFamilyName },
   { eventName: 'validate-new-tree-data', controllerFct: controller.validateNewTreeData },
   { eventName: 'submit-new-tree', controllerFct: controller.processNewTreeSubmission },
+  // delete tree family
+  { eventName: 'delete-trees-from-root-id', controllerFct: controller.deleteTreesFromRootId },
+  // retrieve tree familiy
+  { eventName: 'retrieve-trees-from-root-id', controllerFct: controller.retrieveTreesFromRootId },
+  // create new tree in family
   { eventName: 'validate-new-tree-version-data', controllerFct: controller.validateNewTreeVersionData },
   { eventName: 'submit-new-tree-version', controllerFct: controller.processNewTreeVersionSubmission },
+  // delete tree in family
+  { eventName: 'delete-tree-from-id', controllerFct: controller.deleteTreeFromId },
+  // retrieve tree
+  { eventName: 'retrieve-tree-from-id', controllerFct: controller.retrieveTreeFromId },
 ];
 
 function bindEventToControllerFct(socket, inputEvent, controllerFct) {
