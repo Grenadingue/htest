@@ -1,3 +1,4 @@
+const sioUploader = require('../libraries/socketio-file-upload');
 const graphicalInterface = require('./graphicalInterface');
 const dashboard = require('./dashboard');
 const testTreesLibrary = require('./testTreesLibrary');
@@ -10,6 +11,7 @@ module.exports.init = (app, io) => {
   testTreesLibrary.initHttp(app);
 
   // init socket.io events
+  sioUploader.init(app);
   io.on('connection', (socket) => {
     dashboard.init(socket);
     testTreesLibrary.initSocketIo(socket);
