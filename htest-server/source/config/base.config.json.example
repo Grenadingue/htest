@@ -1,6 +1,7 @@
 {
   "webServer": {
-    "port": 8080
+    "port": 8080,
+    "hostname": "127.0.0.1"
   },
   "dataBase": "mongodb://[username:password@]host1[:port1]/database_name",
   "uploadDirectory": "/tmp/htest-server-uploads"
