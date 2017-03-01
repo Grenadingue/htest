@@ -2,15 +2,6 @@
   "webServer": {
     "port": 8080
   },
-  "dataBase": {
-    "database": "htest",
-    "username": "root",
-    "password": "foo",
-    "options": {
-      "host": "localhost",
-      "dialect": "mysql",
-      "logging": false
-    }
-  },
+  "dataBase": "mongodb://[username:password@]host1[:port1]/database_name",
   "uploadDirectory": "/tmp/htest-server-uploads"
 }
