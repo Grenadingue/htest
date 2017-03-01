@@ -1,12 +1,8 @@
 const clients = {};
-let clientId = 0;
 
 module.exports.register = (socket) => {
-  const id = clientId;
-
-  clientId += 1;
-  clients[id] = socket;
-  return id;
+  clients[socket.id] = socket;
+  return socket.id;
 };
 
 module.exports.unregister = (id) => {
