@@ -27,9 +27,11 @@ function bindEventToControllerFct(socket, inputEvent, controllerFct) {
   socket.on(inputEvent, (inputParameters) => {
     console.log(`testTreesLibrary router:\t'${inputEvent}' event received`);
     controllerFct(inputParameters).then((output) => {
+      output = output !== undefined ? output : {};
       output.status = 'success';
       socket.emit(outputEvent, output);
     }).catch((output) => {
+      output = output !== undefined ? output : {};
       output.status = 'failure';
       socket.emit(outputEvent, output);
     });
