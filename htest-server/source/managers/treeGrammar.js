@@ -1,7 +1,5 @@
 const grammarModel = require('../models/treeGrammar');
 
-const objectPrototype = Object.prototype.toString.call;
-
 function validateObject(object, validationCriteria) {
   const objectAttributesValidity = [];
 
@@ -23,7 +21,7 @@ function validateObject(object, validationCriteria) {
 
       if (criteriaKey === objectKey) {
         objectAttrValidity.value = objectAttribute;
-        objectAttrValidity.dataTypes.found = objectPrototype(objectAttribute);
+        objectAttrValidity.dataTypes.found = Object.prototype.toString.call(objectAttribute);
         objectAttrValidity.validity = (objectAttrValidity.dataTypes.found === criteria.dataType);
 
         if ('minLength' in criteria) {
@@ -38,9 +36,9 @@ function validateObject(object, validationCriteria) {
           objectAttrValidity.dataTypes.union = { expected: criteria.unionTypes, found: [] };
           for (const value of objectAttribute) {
             let dataTypeIsValid = false;
-            objectAttrValidity.dataTypes.union.found.push(objectPrototype(value));
+            objectAttrValidity.dataTypes.union.found.push(Object.prototype.toString.call(value));
             for (const dataType of criteria.unionTypes) {
-              dataTypeIsValid = (dataType === objectPrototype(value)) ? true : dataTypeIsValid;
+              dataTypeIsValid = (dataType === Object.prototype.toString.call(value)) ? true : dataTypeIsValid;
             }
             unionIsValid = dataTypeIsValid ? unionIsValid : false;
           }
@@ -66,7 +64,7 @@ function validateObject(object, validationCriteria) {
       reason: 'Unexpected attribute',
       key: objectKey,
       value: objectAttribute,
-      dataType: objectPrototype(objectAttribute),
+      dataType: Object.prototype.toString.call(objectAttribute),
     };
     let unexpectedAttributeFound = true;
 

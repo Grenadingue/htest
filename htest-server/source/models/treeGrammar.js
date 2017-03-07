@@ -1,5 +1,3 @@
-const objectPrototype = Object.prototype.toString.call;
-
 const validTargetPlatform = [String];
 const validAnswerPossibilities = [String];
 const validAnswerConsequences = [String, Boolean];
@@ -52,16 +50,20 @@ const validationSets = {
   ],
 };
 
+function convertObjectTypeToString(objectType) {
+  return Object.prototype.toString.call(objectType());
+}
+
 function convertValidationObjectDataTypes(validationObject) {
   for (const criteriaKey in validationObject) {
     const validationCriteria = validationObject[criteriaKey];
-    validationCriteria.dataType = objectPrototype(validationCriteria.dataType());
+    validationCriteria.dataType = convertObjectTypeToString(validationCriteria.dataType);
   }
 }
 
 function convertValidationUnionsyDataTypes(validationUnion) {
   for (const criteriaKey in validationUnion) {
-    validationUnion[criteriaKey] = objectPrototype(validationUnion[criteriaKey]());
+    validationUnion[criteriaKey] = convertObjectTypeToString(validationUnion[criteriaKey]);
   }
 }
 
