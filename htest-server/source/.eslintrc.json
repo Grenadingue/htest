@@ -13,6 +13,9 @@
         "max-len": "off",
         "no-console": "off",
         "no-param-reassign": "off",
-        "arrow-parens": ["error", "always"]
+        "arrow-parens": ["error", "always"],
+        "no-restricted-syntax": "off",
+        "guard-for-in": "off",
+        "no-underscore-dangle": "off"
     }
 }
