@@ -1,8 +1,8 @@
-const path = require('path');
 const Tree = require('../models/Tree').Model;
 const jsonLoader = require('./jsonLoader');
 const treeGrammar = require('./treeGrammar');
 const treeSaver = require('./treeSaver');
+const treeExtractor = require('./treeExtractor');
 
 // const lolDatabase = {
 //   trees: [
@@ -42,10 +42,14 @@ module.exports.deleteTreeFromId = (parameters) => new Promise((fulfill, reject) 
 module.exports.serveTreeAsFile = (parameters) => new Promise((fulfill, reject) => { // download tree from id
   console.log('testTreesLibrary controller:\tserveTreeAsFile()');
   console.log(parameters);
-  if (parameters) {
-    fulfill({ path: path.join(__dirname, '../config/base.config.json.example'), name: `tree_${parameters.id}.json` });
+  if (parameters && 'id' in parameters) {
+    treeExtractor.extractFromId(parameters.id).then((outputFile) => {
+      fulfill(outputFile);
+    }).catch((error) => {
+      reject(error);
+    });
   } else {
-    reject();
+    reject({ message: 'invalid input parameters' });
   }
 });
 

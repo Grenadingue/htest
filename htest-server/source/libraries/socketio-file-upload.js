@@ -1,4 +1,4 @@
-const uploadDirectory = require('../config/base.config').uploadDirectory;
+const uploadDirectory = require('../config/base.config').fileSystem.uploadDirectory;
 const Siofu = require('socketio-file-upload');
 const mkdirp = require('mkdirp');
 const fs = require('fs');
