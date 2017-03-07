@@ -38,19 +38,35 @@ function mongoosePromisifySave(MongooseModel) {
   });
 }
 
-if (mongoose.find !== undefined || mongoose.findOne !== undefined || mongoose.save !== undefined) {
-  console.log('To register it\'s own methods \'libs/mongoose.js\' usually overrides:');
-  console.log('\t\'mongoose.find\'');
-  console.log('\t\'mongoose.findOne\'');
-  console.log('\t\'mongoose.save\'');
-  console.log('Today the original \'mongoose\' object already has one of these methods registred');
+function findAll() {
+  return mongoosePromisifyFind(this, {});
+}
+
+function findById(_id) {
+  return mongoosePromisifyFindOne(this, { _id });
+}
+
+function findByName(name) {
+  return mongoosePromisifyFindOne(this, { name });
+}
+
+function save() {
+  return mongoosePromisifySave(this);
+}
+
+if (mongoose.promises !== undefined) {
+  console.log('To register it\'s own methods \'libraries/mongoose.js\' usually overrides \'mongoose.promises\'');
+  console.log('Today the original \'mongoose\' object already has the \'promises\' key registred');
   console.log('This may be due to a mongoose version update');
-  console.log('\'libs/mongoose.js\' automatically rejects this error, please review it manually');
+  console.log('\'libraries/mongoose.js\' automatically rejects this error, please review it manually');
   console.log('Exiting process...');
   process.exit(1);
 }
 
 module.exports = mongoose;
-module.exports.find = mongoosePromisifyFind;
-module.exports.findOne = mongoosePromisifyFindOne;
-module.exports.save = mongoosePromisifySave;
+module.exports.promises = {
+  findAll,
+  findById,
+  findByName,
+  save,
+};

@@ -6,6 +6,7 @@ const TreeSchema = new Schema({
   id: String,
   familyId: String,
   name: String,
+  version: Number,
   root: [{ type: Schema.ObjectId, ref: 'abstractNode' }],
 });
 
@@ -15,9 +16,9 @@ function autoPopulateRoot(next) {
 }
 
 TreeSchema.pre('findOne', autoPopulateRoot);
-TreeSchema.statics.findAll = () => mongoose.find(this, {});
-TreeSchema.statics.findById = (_id) => mongoose.findOne(this, { _id });
-TreeSchema.statics.save = () => mongoose.save(this);
+TreeSchema.statics.findAll = mongoose.promises.findAll;
+TreeSchema.statics.findById = mongoose.promises.findById;
+TreeSchema.statics.save = mongoose.promises.save;
 
 const Tree = mongoose.model('tree', TreeSchema);
 

@@ -7,6 +7,8 @@ const AnswerConsequenceSchema = new Schema({
   answerConsequence: String,
 });
 
+AnswerConsequenceSchema.statics.save = mongoose.promises.save;
+
 const AnswerConsequence = mongoose.model('answerConsequence', AnswerConsequenceSchema);
 
 module.exports.Schema = AnswerConsequenceSchema;

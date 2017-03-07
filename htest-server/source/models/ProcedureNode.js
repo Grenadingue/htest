@@ -11,7 +11,7 @@ const ProcedureNodeSchema = new Schema({ // extends AbstractNodeSchema
   answerConsequences: [{ type: Schema.ObjectId, ref: 'answerConsequence' }],
 });
 
-ProcedureNodeSchema.statics.save = () => mongoose.save(this);
+ProcedureNodeSchema.statics.save = mongoose.promises.save;
 
 const ProcedureNode = AbstractNode.discriminator('procedureNode', ProcedureNodeSchema);
 

@@ -19,7 +19,7 @@ function autoPopulateBranches(next) {
 }
 
 AbstractNodeSchema.pre('find', autoPopulateBranches);
-AbstractNodeSchema.statics.save = () => mongoose.save(this);
+AbstractNodeSchema.statics.save = mongoose.promises.save;
 
 const AbstractNode = mongoose.model('abstractNode', AbstractNodeSchema);
 
