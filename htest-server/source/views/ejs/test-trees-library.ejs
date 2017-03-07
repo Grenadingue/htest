@@ -148,9 +148,9 @@
       clearPage();
       displayPageTitle(state.pageTitle);
       displaySubSection(subSection);
-      treeViewer.appendChild(document.createTextNode('(Non rendered XML tree)'));
+      treeViewer.appendChild(document.createTextNode('(Non rendered JSON tree)'));
       treeViewer.appendChild(document.createElement('br'));
-      treeViewer.appendChild(document.createTextNode(`"${tree.raw}"`));
+      treeViewer.appendChild(document.createTextNode(`"${JSON.stringify(tree)}"`));
       subSection.appendChild(treeViewer);
       document.getElementById('page-wrapper-fluid').appendChild(subSection);
     }
@@ -159,7 +159,7 @@
       const subSection = create('subSection', { title: 'Create tree family', id: 'create-tree-family' });
       const treeFamilyNameInput = create('textInput', { title: 'Tree family\'s name', helpMsg: 'Name', id: 'name-input', onBlur: onFamilyNameInputBlur });
       const nameValidationStatus = create('alert', { status: 'info', title: 'Validation status:', msg: 'You must enter a name', id: 'name-validation-status' });
-      const treeFileInput = create('fileInput', { title: 'First family\'s tree (xml)', id: 'upload-input' });
+      const treeFileInput = create('fileInput', { title: 'First family\'s tree (JSON)', id: 'upload-input' });
       const fileValidationStatus = create('alert', { status: 'info', title: 'Validation status:', msg: 'You must select a file', id: 'file-validation-status' });
       const fieldset = create('fieldset', { disabled: true, id: 'submit-fieldset' });
       const submitBtn = create('button', { class: 'btn btn-primary', text: 'Submit', id: 'submit-btn' });
@@ -209,7 +209,7 @@
       const updateSubSection = create('subSection', { title: 'Update tree family' });
       const versionFieldset = create('fieldset', { disabled: true, id: 'version-fieldset' });
       const versionInfo = create('textInput', { title: 'Next version (generated)', value: 'Unknown', id: 'generated-version-field' });
-      const treeFileInput = create('fileInput', { title: 'New tree (xml)', id: 'upload-input' });
+      const treeFileInput = create('fileInput', { title: 'New tree (JSON)', id: 'upload-input' });
       const fileValidationStatus = create('alert', { status: 'info', title: 'Validation status:', msg: 'You must select a file', id: 'file-validation-status' });
       const submitFieldset = create('fieldset', { disabled: true, id: 'submit-fieldset' });
       const submitBtn = create('button', { class: 'btn btn-primary', text: 'Submit', id: 'submit-btn' });
@@ -403,7 +403,8 @@
     }
 
     function submitNewFamilyClicked() {
-      retrieveNewFamilySubmissionStatus();
+      const familyName = document.getElementById('name-input').value;
+      retrieveNewFamilySubmissionStatus(familyName);
     }
 
     function onTreeFamiliesSelectorChange(data) {
@@ -529,7 +530,7 @@
       socket.once(`${eventName}-response`, (response) => {
         if (response && response.status && response.status === 'success') {
           console.log('retrieveAndDisplayTree: successfull response received', response);
-          if (response.tree && response.tree.id === tree.id) {
+          if (response.tree && response.tree._id === tree.id) {
             displayTree(response.tree);
           }
         }
@@ -581,7 +582,7 @@
       socket.emit(eventName, { clientId: state.clientId, fileId: file.id });
     }
 
-    function retrieveNewFamilySubmissionStatus() {
+    function retrieveNewFamilySubmissionStatus(familyName) {
       const eventName = 'submit-new-tree';
 
       console.log('retrieveNewFamilySubmissionStatus');
@@ -599,7 +600,7 @@
           }
         }
       });
-      socket.emit(eventName, { clientId: state.clientId });
+      socket.emit(eventName, { clientId: state.clientId, familyName: familyName });
     }
 
     function retrieveAndDisplayTreeFamiliesSelector(treeFamily) {

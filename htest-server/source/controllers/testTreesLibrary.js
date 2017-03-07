@@ -1,154 +1,24 @@
-const fileUploader = require('../managers/fileUploader');
 const sioClients = require('../managers/sioClients');
-const path = require('path');
+const fileUploader = require('../managers/fileUploader');
+const treeFamilies = require('../managers/treeFamilies');
+const trees = require('../managers/trees');
 
-const lolDatabase = {
-  trees: [
-    { id: 0, rootId: 'a1', name: 'Foo tree', version: 1, raw: '<xml>raw tree data</xml>' },
-    { id: 1, rootId: 'a1', name: 'Foo tree', version: 2, raw: '<xml>raw tree data</xml>' },
-    { id: 2, rootId: 'b2', name: 'Bar tree', version: 1, raw: '<xml>raw tree data</xml>' },
-    { id: 3, rootId: 'a1', name: 'Foo tree', version: 3, raw: '<xml>raw tree data</xml>' },
-    { id: 4, rootId: 'c3', name: 'Baz tree', version: 1, raw: '<xml>raw tree data</xml>' },
-    { id: 5, rootId: 'b2', name: 'Bar tree', version: 2, raw: '<xml>raw tree data</xml>' },
-  ],
-};
-
-module.exports.retrieveAvailableTrees = () => new Promise((fulfill) => {
-  console.log('testTreesLibrary controller:\tretrieveAvailableTrees()');
-  const response = { trees: [] };
-  const roots = [];
-
-  lolDatabase.trees.forEach((tree) => {
-    if (roots.indexOf(tree.rootId) === -1) {
-      roots.push(tree.rootId);
-      response.trees.push({ rootId: tree.rootId, name: tree.name });
-    }
-  });
-  fulfill(response);
-});
-
-module.exports.retrieveTreesFromRootId = (parameters) => new Promise((fulfill, reject) => {
-  console.log('testTreesLibrary controller:\tretrieveTreesFromRootId()');
-  console.log(parameters);
-  const response = { rootId: undefined, trees: [] };
-
-  if (parameters && parameters.id) {
-    lolDatabase.trees.forEach((tree) => {
-      if (parameters.id === tree.rootId) {
-        response.rootId = tree.rootId;
-        response.trees.push({ id: tree.id, name: tree.name, version: tree.version });
-      }
-    });
-
-    console.log(response);
-    if (response.trees.length !== 0) {
-      fulfill(response);
-    } else {
-      reject({ error: 'unavailable tree(s) requested' });
-    }
-  } else {
-    reject({ error: 'invalid input parameters' });
-  }
-});
-
-module.exports.retrieveTreeFromId = (parameters) => new Promise((fulfill, reject) => {
-  console.log('testTreesLibrary controller:\tretrieveTreeFromId()');
-  console.log(parameters);
-  if (parameters && ('id' in parameters)) {
-    if (lolDatabase.trees[parameters.id]) {
-      fulfill({ tree: lolDatabase.trees[parameters.id] });
-    } else {
-      reject({ error: 'unavailable tree requested' });
-    }
-  } else {
-    reject({ error: 'invalid input parameters' });
-  }
-});
-
-module.exports.deleteTreesFromRootId = (parameters) => new Promise((fulfill, reject) => {
-  console.log('testTreesLibrary controller:\tdeleteTreesFromRootId()');
-  console.log(parameters);
-  if (parameters) {
-    fulfill({ message: 'fake success' });
-  } else {
-    reject({ message: 'fake error' });
-  }
-});
-
-module.exports.deleteTreeFromId = (parameters) => new Promise((fulfill, reject) => {
-  console.log('testTreesLibrary controller:\tdeleteTreeFromId()');
-  console.log(parameters);
-  if (parameters) {
-    fulfill({ message: 'fake success' });
-  } else {
-    reject({ message: 'fake error' });
-  }
-});
-
-module.exports.validateNewTreeFamilyName = (parameters) => new Promise((fulfill, reject) => {
-  console.log('testTreesLibrary controller:\tvalidateNewTreeFamilyName()');
-  console.log(parameters);
-  if (parameters) {
-    fulfill({ message: 'fake success' });
-  } else {
-    reject({ message: 'fake error' });
-  }
-});
-
-module.exports.validateNewTreeData = (parameters) => new Promise((fulfill, reject) => {
-  console.log('testTreesLibrary controller:\tvalidateNewTreeData()');
-  console.log(parameters);
-  if (parameters) {
-    fulfill({ message: 'fake success' });
-  } else {
-    reject({ message: 'fake error' });
-  }
-});
-
-module.exports.processNewTreeSubmission = (parameters) => new Promise((fulfill, reject) => {
-  console.log('testTreesLibrary controller:\tprocessNewTreeSubmission()');
-  console.log(parameters);
-  if (parameters) {
-    fulfill({ message: 'fake success' });
-  } else {
-    reject({ message: 'fake error' });
-  }
-});
-
-module.exports.validateNewTreeVersionData = (parameters) => new Promise((fulfill, reject) => {
-  console.log('testTreesLibrary controller:\tvalidateNewTreeVersionData()');
-  console.log(parameters);
-  if (parameters) {
-    fulfill({ message: 'fake success' });
-  } else {
-    reject({ message: 'fake error' });
-  }
-});
-
-module.exports.processNewTreeVersionSubmission = (parameters) => new Promise((fulfill, reject) => {
-  console.log('testTreesLibrary controller:\tprocessNewTreeVersionSubmission()');
-  console.log(parameters);
-  if (parameters) {
-    fulfill({ message: 'fake success', rootId: lolDatabase.trees[0].rootId });
-  } else {
-    reject({ message: 'fake error' });
-  }
-});
-
-module.exports.serveTreeAsFile = (parameters) => new Promise((fulfill, reject) => {
-  console.log('testTreesLibrary controller:\tserveTreeAsFile()');
-  console.log(parameters);
-  if (parameters) {
-    fulfill({ path: path.join(__dirname, '../config/base.config.json.example'), name: `tree_${parameters.id}.json` });
-  } else {
-    reject();
-  }
-});
-
-module.exports.onFileUploadSuccess = fileUploader.onSaved;
-
-module.exports.onFileUploadFailure = fileUploader.onError;
-
+module.exports.retrieveAvailableTrees = treeFamilies.retrieveAvailableTrees;
+module.exports.retrieveTreesFromRootId = treeFamilies.retrieveTreesFromRootId;
+module.exports.retrieveTreeFromId = trees.retrieveTreeFromId;
+module.exports.deleteTreesFromRootId = treeFamilies.deleteTreesFromRootId;
+module.exports.deleteTreeFromId = trees.deleteTreeFromId;
+module.exports.validateNewTreeFamilyName = treeFamilies.validateNewTreeFamilyName;
+module.exports.validateNewTreeData = treeFamilies.validateNewTreeData;
+module.exports.processNewTreeSubmission = treeFamilies.processNewTreeSubmission;
+module.exports.validateNewTreeVersionData = treeFamilies.validateNewTreeVersionData;
+module.exports.processNewTreeVersionSubmission = treeFamilies.processNewTreeVersionSubmission;
+module.exports.serveTreeAsFile = trees.serveTreeAsFile;
+module.exports.onFileUploadSuccess = treeFamilies.onFileUploadSuccess;
+module.exports.onFileUploadFailure = treeFamilies.onFileUploadFailure;
 module.exports.register = sioClients.register;
 
-module.exports.unregister = sioClients.unregister;
+module.exports.unregister = (clientId) => {
+  sioClients.unregister(clientId);
+  fileUploader.clearClientUploads(clientId);
+};
