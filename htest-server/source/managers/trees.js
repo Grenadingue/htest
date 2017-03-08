@@ -6,12 +6,12 @@ const treeExtractor = require('./treeExtractor');
 
 // const lolDatabase = {
 //   trees: [
-//     { id: 0, rootId: 'a1', name: 'Foo tree', version: 1, raw: '<xml>raw tree data</xml>' },
-//     { id: 1, rootId: 'a1', name: 'Foo tree', version: 2, raw: '<xml>raw tree data</xml>' },
-//     { id: 2, rootId: 'b2', name: 'Bar tree', version: 1, raw: '<xml>raw tree data</xml>' },
-//     { id: 3, rootId: 'a1', name: 'Foo tree', version: 3, raw: '<xml>raw tree data</xml>' },
-//     { id: 4, rootId: 'c3', name: 'Baz tree', version: 1, raw: '<xml>raw tree data</xml>' },
-//     { id: 5, rootId: 'b2', name: 'Bar tree', version: 2, raw: '<xml>raw tree data</xml>' },
+//     { id: 0, familyId: 'a1', name: 'Foo tree', version: 1, raw: '<xml>raw tree data</xml>' },
+//     { id: 1, familyId: 'a1', name: 'Foo tree', version: 2, raw: '<xml>raw tree data</xml>' },
+//     { id: 2, familyId: 'b2', name: 'Bar tree', version: 1, raw: '<xml>raw tree data</xml>' },
+//     { id: 3, familyId: 'a1', name: 'Foo tree', version: 3, raw: '<xml>raw tree data</xml>' },
+//     { id: 4, familyId: 'c3', name: 'Baz tree', version: 1, raw: '<xml>raw tree data</xml>' },
+//     { id: 5, familyId: 'b2', name: 'Bar tree', version: 2, raw: '<xml>raw tree data</xml>' },
 //   ],
 // };
 

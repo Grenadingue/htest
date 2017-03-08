@@ -4,9 +4,9 @@ const treeFamilies = require('../managers/treeFamilies');
 const trees = require('../managers/trees');
 
 module.exports.retrieveAvailableTrees = treeFamilies.retrieveAvailableTrees;
-module.exports.retrieveTreesFromRootId = treeFamilies.retrieveTreesFromRootId;
+module.exports.retrieveTreesFromFamilyId = treeFamilies.retrieveTreesFromFamilyId;
 module.exports.retrieveTreeFromId = trees.retrieveTreeFromId;
-module.exports.deleteTreesFromRootId = treeFamilies.deleteTreesFromRootId;
+module.exports.deleteTreesFromFamilyId = treeFamilies.deleteTreesFromFamilyId;
 module.exports.deleteTreeFromId = trees.deleteTreeFromId;
 module.exports.validateNewTreeFamilyName = treeFamilies.validateNewTreeFamilyName;
 module.exports.validateNewTreeData = treeFamilies.validateNewTreeData;

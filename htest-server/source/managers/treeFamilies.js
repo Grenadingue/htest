@@ -8,7 +8,7 @@ module.exports.retrieveAvailableTrees = () => new Promise((fulfill, reject) => {
   console.log('testTreesLibrary controller:\tretrieveAvailableTrees()');
   TreeFamily.findAll().then((treeFamilies) => {
     treeFamilies.forEach((treeFamily) => {
-      response.trees.push({ rootId: treeFamily._id, name: treeFamily.name });
+      response.trees.push({ familyId: treeFamily._id, name: treeFamily.name });
     });
     fulfill(response);
   }).catch((error) => {
@@ -16,14 +16,14 @@ module.exports.retrieveAvailableTrees = () => new Promise((fulfill, reject) => {
   });
 });
 
-module.exports.retrieveTreesFromRootId = (parameters) => new Promise((fulfill, reject) => { // retrieve tree family
-  const response = { rootId: undefined, trees: [] };
+module.exports.retrieveTreesFromFamilyId = (parameters) => new Promise((fulfill, reject) => { // retrieve tree family
+  const response = { familyId: undefined, trees: [] };
 
-  console.log('testTreesLibrary controller:\tretrieveTreesFromRootId()');
+  console.log('testTreesLibrary controller:\tretrieveTreesFromFamilyId()');
   console.log(parameters);
   if (parameters && parameters.id) {
     TreeFamily.findById(parameters.id).then((treeFamily) => {
-      response.rootId = treeFamily._id;
+      response.familyId = treeFamily._id;
       treeFamily.trees.forEach((tree) => {
         response.trees.push({ id: tree._id, name: tree.name, version: tree.version });
       });
@@ -40,8 +40,8 @@ module.exports.retrieveTreesFromRootId = (parameters) => new Promise((fulfill, r
   }
 });
 
-module.exports.deleteTreesFromRootId = (parameters) => new Promise((fulfill, reject) => { // delete tree family
-  console.log('testTreesLibrary controller:\tdeleteTreesFromRootId()');
+module.exports.deleteTreesFromFamilyId = (parameters) => new Promise((fulfill, reject) => { // delete tree family
+  console.log('testTreesLibrary controller:\tdeleteTreesFromFamilyId()');
   console.log(parameters);
 //   if (parameters) {
 //     fulfill({ message: 'fake success' });
@@ -143,7 +143,7 @@ module.exports.processNewTreeVersionSubmission = (parameters) => new Promise((fu
   console.log('testTreesLibrary controller:\tprocessNewTreeVersionSubmission()');
   console.log(parameters);
   // if (parameters) {
-  //   fulfill({ message: 'fake success', rootId: lolDatabase.trees[0].rootId });
+  //   fulfill({ message: 'fake success', familyId: lolDatabase.trees[0].familyId });
   // } else {
   //   reject({ message: 'fake error' });
   // }

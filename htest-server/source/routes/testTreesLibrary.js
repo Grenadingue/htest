@@ -10,9 +10,9 @@ const eventsAndFunctions = [
   { eventName: 'validate-new-tree-data', controllerFct: controller.validateNewTreeData },
   { eventName: 'submit-new-tree', controllerFct: controller.processNewTreeSubmission },
   // delete tree family
-  { eventName: 'delete-trees-from-root-id', controllerFct: controller.deleteTreesFromRootId },
+  { eventName: 'delete-trees-from-family-id', controllerFct: controller.deleteTreesFromFamilyId },
   // retrieve tree familiy
-  { eventName: 'retrieve-trees-from-root-id', controllerFct: controller.retrieveTreesFromRootId },
+  { eventName: 'retrieve-trees-from-family-id', controllerFct: controller.retrieveTreesFromFamilyId },
   // create new tree in family
   { eventName: 'validate-new-tree-version-data', controllerFct: controller.validateNewTreeVersionData },
   { eventName: 'submit-new-tree-version', controllerFct: controller.processNewTreeVersionSubmission },

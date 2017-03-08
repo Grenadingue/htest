@@ -105,7 +105,7 @@
 
       clearPage();
       displayPageTitle(state.pageTitle);
-      createTreeBtn.treeFamily = { rootId: data.rootId, name: `${data.trees[0].name}` };
+      createTreeBtn.treeFamily = { familyId: data.familyId, name: `${data.trees[0].name}` };
       pageWrapper.appendChild(createTreeBtn);
       displaySubSection(tableResponsive);
 
@@ -124,12 +124,12 @@
         let button;
         button = create('button', { id: null, class: 'btn btn-sm btn-success', text: 'View', onClick: viewTreeClicked });
         button.tree = line;
-        button.rootId = data.rootId;
+        button.familyId = data.familyId;
         tableLine.push(button);
 
         button = create('button', { id: null, class: 'btn btn-sm btn-danger', text: 'Delete', onClick: deleteTreeClicked });
         button.tree = line;
-        button.rootId = data.rootId;
+        button.familyId = data.familyId;
         tableLine.push(button);
 
         tableContent.push(tableLine);
@@ -250,7 +250,7 @@
         if (preSelect !== undefined && treeFamily.name === preSelect.name) {
           selectedValue = i;
         }
-        selectorList.push({ id: `parent-selector-${treeFamily.rootId}`, name: treeFamily.name });
+        selectorList.push({ id: `parent-selector-${treeFamily.familyId}`, name: treeFamily.name });
         i += 1;
       });
 
@@ -258,21 +258,21 @@
       replaceSelector('parent-selector', selector);
 
       if (selectedValue !== undefined && preSelect) {
-        retrieveAndDisplayTreeFamilyVersionsSelector(preSelect.rootId);
+        retrieveAndDisplayTreeFamilyVersionsSelector(preSelect.familyId);
       }
     }
 
     function displayTreeFamiliesSelectorChange(selector) {
-      const rootId = selector.options[selector.selectedIndex].id.split('-')[2];
+      const familyId = selector.options[selector.selectedIndex].id.split('-')[2];
       const generatedVersionField = document.getElementById('generated-version-field');
       const newSelector = create('listSelector', { title: 'Select parent version', list: [{ id: 'parent-version-0', name: 'None' }], id: 'parent-version-selector', onChange: onTreeFamilyVersionSelectorChange });
 
-      console.log('value:', selector.options[selector.selectedIndex].value, '| rootId:', rootId);
+      console.log('value:', selector.options[selector.selectedIndex].value, '| familyId:', familyId);
       generatedVersionField.value = 'Unknown';
       document.getElementById('download-btn').setAttribute('href', '#');
       replaceSelector('parent-version-selector', newSelector);
       if (selector.selectedIndex !== 0) {
-        retrieveAndDisplayTreeFamilyVersionsSelector(rootId);
+        retrieveAndDisplayTreeFamilyVersionsSelector(familyId);
       } else {
         updateFieldsetState('parent-version-fieldset', true);
         updateFieldsetState('download-fieldset', true);
@@ -352,8 +352,8 @@
     }
 
     function viewTreeFamilyClicked(data) {
-      console.log('user wants to view tree family', data.target.treeFamily.rootId);
-      retrieveAndDisplayTreeFamily(data.target.treeFamily.rootId);
+      console.log('user wants to view tree family', data.target.treeFamily.familyId);
+      retrieveAndDisplayTreeFamily(data.target.treeFamily.familyId);
     }
 
     function updateTreeFamilyClicked(data) {
@@ -363,7 +363,7 @@
 
     function deleteTreeFamilyClicked(data) {
       console.log('user wants to detete tree family', data.target.treeFamily);
-      submitTreeFamilyDeletionAndDisplayTreeFamilies(data.target.treeFamily.rootId);
+      submitTreeFamilyDeletionAndDisplayTreeFamilies(data.target.treeFamily.familyId);
     }
 
     function viewTreeClicked(data) {
@@ -373,7 +373,7 @@
 
     function deleteTreeClicked(data) {
       console.log('deleteTreeClicked', data.target.tree);
-      submitTreeDeletionAndDisplayTreeFamily(data.target.rootId, data.target.tree.id);
+      submitTreeDeletionAndDisplayTreeFamily(data.target.familyId, data.target.tree.id);
     }
 
     function onFamilyNameInputBlur(data) {
@@ -479,30 +479,30 @@
       socket.emit(eventName);
     }
 
-    function retrieveAndDisplayTreeFamily(rootId) {
-      const eventName = 'retrieve-trees-from-root-id';
+    function retrieveAndDisplayTreeFamily(familyId) {
+      const eventName = 'retrieve-trees-from-family-id';
 
-      console.log('user wants to view tree family', rootId);
+      console.log('user wants to view tree family', familyId);
       socket.once(`${eventName}-response`, (response) => {
         if (response && response.status === 'success') {
           const trees = response.trees;
           console.log('retrieveAndDisplayTreeFamily: successfull response received', response);
-          if (trees && response.rootId === rootId) {
+          if (trees && response.familyId === familyId) {
             displayTreeFamily(response);
           }
         }
       });
-      socket.emit(eventName, { id: rootId });
+      socket.emit(eventName, { id: familyId });
     }
 
-    function submitTreeDeletionAndDisplayTreeFamily(rootId, id) {
+    function submitTreeDeletionAndDisplayTreeFamily(familyId, id) {
       const eventName = 'delete-tree-from-id';
 
-      console.log('user wants to delete tree id', id, 'inside family rootId', rootId);
+      console.log('user wants to delete tree id', id, 'inside family familyId', familyId);
       socket.once(`${eventName}-response`, (response) => {
         if (response && response.status === 'success') {
           console.log('submitTreeDeletionAndDisplayTreeFamily: successfull response received', response);
-          retrieveAndDisplayTreeFamily(rootId);
+          retrieveAndDisplayTreeFamily(familyId);
         } else if (response && response.status === 'failure' && ('message' in response)) {
           alert(response.message);
         } else {
@@ -512,10 +512,10 @@
       socket.emit(eventName, { id });
     }
 
-    function submitTreeFamilyDeletionAndDisplayTreeFamilies(rootId) {
-      const eventName = 'delete-trees-from-root-id';
+    function submitTreeFamilyDeletionAndDisplayTreeFamilies(familyId) {
+      const eventName = 'delete-trees-from-family-id';
 
-      console.log('user wants to delete tree family with root id', rootId);
+      console.log('user wants to delete tree family with family id', familyId);
       socket.once(`${eventName}-response`, (response) => {
         if (response && response.status === 'success') {
           console.log('submitTreeFamilyDeletionAndDisplayTreeFamilies: successfull response received', response);
@@ -527,7 +527,7 @@
           alert('Unknown error, please try again');
         }
       });
-      socket.emit(eventName, { rootId });
+      socket.emit(eventName, { familyId });
     }
 
     function retrieveAndDisplayTree(tree) {
@@ -624,18 +624,18 @@
       socket.emit(eventName);
     }
 
-    function retrieveAndDisplayTreeFamilyVersionsSelector(rootId) {
-      const eventName = 'retrieve-trees-from-root-id';
+    function retrieveAndDisplayTreeFamilyVersionsSelector(familyId) {
+      const eventName = 'retrieve-trees-from-family-id';
 
       socket.once(`${eventName}-response`, (response) => {
         if (response && response.status === 'success') {
           console.log('retrieveAndDisplayTreeFamilyVersionsSelector: successfull response received', response);
-          if (('trees' in response) && response.rootId === rootId) {
+          if (('trees' in response) && response.familyId === familyId) {
             displayTreeFamilyVersionsSelectorChanges(response);
           }
         }
       });
-      socket.emit(eventName, { id: rootId });
+      socket.emit(eventName, { id: familyId });
     }
 
     function retrieveNewVersionFileValidation(file) {
@@ -665,9 +665,9 @@
 
       console.log('retrieveNewTreeVersionSubmissionStatus');
       socket.once(`${eventName}-response`, (response) => {
-        if (response && response.status && response.status === 'success' && ('rootId' in response)) {
+        if (response && response.status && response.status === 'success' && ('familyId' in response)) {
           state.fileValidated = false;
-          retrieveAndDisplayTreeFamily(response.rootId);
+          retrieveAndDisplayTreeFamily(response.familyId);
         } else {
           if (response && response.message) {
             alert(response.message);
