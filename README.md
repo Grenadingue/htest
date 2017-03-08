@@ -1,6 +1,26 @@
 # htest
+`htest = hardware tester`
 
 ## Description
-An hardware tester assistant, build on the top of a web server, originally designed for Ordissimo
+An hardware tester assistant, build on the top of a web server, originally designed for [Ordissimo](http://www.ordissimo.eu/en/about/change-mind)
 
-Work in progress...
+## User documentation
+### Install
+*Incoming...*
+
+### Use
+*Incoming...*
+
+## Technical documentation
+### Software packaging
+See [`packaging instructions`](htest-server/README.md)
+
+### Development
+#### How to build and launch in development mode?
+See [`build and launch instructions`](htest-server/source/README.md)
+
+#### Current state
+*Incoming...*
+
+#### Future
+*Incoming...*
