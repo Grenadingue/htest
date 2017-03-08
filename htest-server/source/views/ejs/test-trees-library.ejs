@@ -178,6 +178,7 @@
       siofu.addEventListener('start', onNewFamilyFileUploadStart);
       siofu.addEventListener('progress', onNewFamilyFileUploadProgess);
       siofu.addEventListener('complete', onNewFamilyFileUploadComplete);
+      siofu.addEventListener('error', onNewFamilyFileUploadError);
       document.getElementById('submit-btn').addEventListener('click', submitNewFamilyClicked, false);
     }
 
@@ -400,6 +401,12 @@
       } else {
         displayNewFamilyFileValidationStatus('failure', 'Unknown error occured during upload');
       }
+    }
+
+    function onNewFamilyFileUploadError(data) {
+      console.log('upload error:', data);
+      displayNewFamilyFileValidationStatus('failure', data.message ? data.message : 'Unknown error occured during upload');
+      retrieveNewFamilyFileValidation(data.file);
     }
 
     function submitNewFamilyClicked() {

@@ -74,12 +74,16 @@ module.exports.validateNewTreeData = (parameters) => new Promise((fulfill, rejec
   console.log(parameters);
   if (parameters && 'clientId' in parameters) {
     const file = fileUploader.getLastUploadFromClientId(parameters.clientId);
-    trees.validateNewTree(file.pathName).then(() => {
-      fulfill({ message: `'${file.name}': success` });
-    }).catch((error) => {
-      console.log(error);
-      reject({ message: `'${file.name}': ${error}` });
-    });
+    if (file !== undefined && file.success === true) {
+      trees.validateNewTree(file.pathName).then(() => {
+        fulfill({ message: `'${file.name}': success` });
+      }).catch((error) => {
+        console.log(error);
+        reject({ message: `'${file.name}': ${error}` });
+      });
+    } else {
+      reject({ message: `'${file.name}': upload error (max upload size 16 MB)` });
+    }
   } else {
     reject({ message: 'invalid input parameters' });
   }

@@ -3,16 +3,21 @@ const fs = require('fs');
 const uploadedFiles = {};
 
 module.exports.onSaved = (event) => {
+  if (event.file.success) {
+    const clientId = event.file.meta.clientId;
+
+    uploadedFiles[clientId] = (uploadedFiles[clientId] === undefined ? [] : uploadedFiles[clientId]);
+    uploadedFiles[clientId].push(event.file);
+    console.log('new file with id', event.file.id, '; received from client id', event.file.meta.clientId, ';', event.file.name, ';', event.file.pathName);
+  }
+};
+
+module.exports.onError = (event) => {
   const clientId = event.file.meta.clientId;
 
   uploadedFiles[clientId] = (uploadedFiles[clientId] === undefined ? [] : uploadedFiles[clientId]);
   uploadedFiles[clientId].push(event.file);
-
-  console.log('new file with id', event.file.id, '; received from client id', event.file.meta.clientId, ';', event.file.name, ';', event.file.pathName);
-};
-
-module.exports.onError = (event) => {
-  console.log('File upload error:', event);
+  console.log('File upload error: file id', event.file.id, '; received from client id', event.file.meta.clientId, ';', event.file.name, ';', event.file.pathName);
 };
 
 module.exports.getLastUploadFromClientId = (clientId) => {
