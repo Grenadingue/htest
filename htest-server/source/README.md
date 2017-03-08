@@ -8,7 +8,7 @@ An hardware tester assistant build on the top of a web server
 ## Software dependencies
 - `nodejs`
 - `npm`
-- `mysql`
+- `mongodb`
 
 ## Build
 ```
@@ -22,7 +22,7 @@ $ npm default_config
 This command will copy the example configuration file in place of the real one used by the server, only if the last one does not exists. Once done edit `config/base.config.json` for your needs
 
 ## Run
-Ensure that `mysql` is started before launching `htest-server`
+Ensure that `mongodb` is started before launching `htest-server`
 ```
 $ npm start
 ```
