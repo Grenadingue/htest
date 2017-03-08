@@ -1,9 +1,9 @@
 [Unit]
 Description=Hardware tester web server
 Requires=network.target
-Requires=mysql.service
+Requires=mongodb.service
 After=network.target
-After=mysql.service
+After=mongodb.service
 
 [Service]
 Type=simple
