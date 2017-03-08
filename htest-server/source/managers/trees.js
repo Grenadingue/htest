@@ -46,6 +46,7 @@ module.exports.serveTreeAsFile = (parameters) => new Promise((fulfill, reject) =
     treeExtractor.extractFromId(parameters.id).then((outputFile) => {
       fulfill(outputFile);
     }).catch((error) => {
+      console.log(error);
       reject(error);
     });
   } else {
