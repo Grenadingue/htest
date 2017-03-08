@@ -12,8 +12,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
-    "type": "svn",
-    "url": "svn+ssh://svn@substantielsvn.dyndns.org/ordissimo/sub/ordissimo/htest-server"
+    "type": "git",
+    "url": "https://github.com/Grenadingue/htest"
   },
   "author": "Nicolas Chauvin",
   "license": "SEE LICENSE IN LICENSE.txt",
