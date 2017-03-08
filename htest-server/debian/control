@@ -4,8 +4,8 @@ Priority: optional
 Maintainer: Nicolas Chauvin <nicolas@substantiel.fr>
 Build-Depends: debhelper (>= 9)
 Standards-Version: 3.9.4
-Vcs-Svn: svn+ssh://svn@substantielsvn.dyndns.org/ordissimo/sub/ordissimo/htest-server
-Vcs-Browser: https://substantielsvn.dyndns.org/ordissimo/browser/ordissimo/sub/ordissimo/htest-server
+Vcs-Git: https://github.com/Grenadingue/htest
+Vcs-Browser: https://github.com/Grenadingue/htest
 
 Package: htest-server
 Architecture: all
