@@ -16,7 +16,7 @@
     "url": "https://github.com/Grenadingue/htest"
   },
   "author": "Nicolas Chauvin",
-  "license": "SEE LICENSE IN LICENSE.txt",
+  "license": "MIT",
   "dependencies": {
     "ejs2": "^2.1.0",
     "express": "^4.14.0",
