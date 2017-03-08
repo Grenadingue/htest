@@ -9,7 +9,7 @@ Vcs-Browser: https://github.com/Grenadingue/htest
 
 Package: htest-server
 Architecture: all
-Depends: ${misc:Depends}, nodejs (>= 6), mysql-server (>= 5.5)
+Depends: ${misc:Depends}, nodejs (>= 6), mongodb (>= 2.4)
 Description: Hardware tester web server
  Provide a user graphical interface, in a web browser, to a human hardware
  tester. Manage a test trees library. Make the tester able to instanciate
