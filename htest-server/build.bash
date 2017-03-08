@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SOURCE_DIR="$SCRIPT_DIR/source"
@@ -18,7 +18,7 @@ cd -
 
 echo "Building debian package from package source..."
 # do not check build dependencies because archlinux's dpkg tools are unable to check it
-dpkg-buildpackage --no-check-builddeps
+dpkg-buildpackage -d # '-d' means '--no-check-builddeps'
 
 echo "Deleting newly generated 'source/node_modules'..."
 rm -rf "$NODE_MODULES"
