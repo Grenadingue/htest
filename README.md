@@ -20,7 +20,11 @@ See [`packaging instructions`](htest-server/README.md)
 See [`build and launch instructions`](htest-server/source/README.md)
 
 #### Current state
+##### Overview
 *Incoming...*
+
+##### API
+See [`application programming interface description`](htest-server/source/documentation/API.md) *(in construction)*
 
 #### Future
 *Incoming...*
