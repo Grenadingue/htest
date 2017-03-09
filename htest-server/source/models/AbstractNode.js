@@ -3,7 +3,6 @@ const mongoose = require('../libraries/mongoose');
 const Schema = mongoose.Schema;
 
 const AbstractNodeSchema = new Schema({
-  id: String,
   name: String,
   exec: String,
   targetPlatforms: [String],

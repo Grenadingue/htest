@@ -3,14 +3,15 @@ const validAnswerPossibilities = [String];
 const validAnswerConsequences = [String, Boolean];
 
 const validTree = {
-  id: { mandatory: false, dataType: String },
+  _id: { mandatory: false, dataType: String },
   familyId: { mandatory: false, dataType: String },
   name: { mandatory: true, dataType: String },
+  version: { mandatory: false, dataType: Number },
   root: { mandatory: true, dataType: Array, minLength: 1 },
 };
 
 const validAbstractNode = {
-  id: { mandatory: false, dataType: String },
+  _id: { mandatory: false, dataType: String },
   name: { mandatory: true, dataType: String },
   exec: { mandatory: false, dataType: String },
   targetPlatforms: { mandatory: false, dataType: Array, unionTypes: validTargetPlatform, minLength: 1 },
@@ -18,7 +19,7 @@ const validAbstractNode = {
 };
 
 const validProcedureNode = {
-  id: { mandatory: false, dataType: String },
+  _id: { mandatory: false, dataType: String },
   name: { mandatory: true, dataType: String },
   exec: { mandatory: false, dataType: String },
   targetPlatforms: { mandatory: false, dataType: Array, unionTypes: validTargetPlatform, minLength: 1 },
@@ -30,7 +31,7 @@ const validProcedureNode = {
 };
 
 const validPointerNode = {
-  id: { mandatory: false, dataType: String },
+  _id: { mandatory: false, dataType: String },
   name: { mandatory: true, dataType: String },
   targetPlatforms: { mandatory: false, dataType: Array, unionTypes: validTargetPlatform, minLength: 1 },
   target: { mandatory: true, dataType: String },

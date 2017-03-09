@@ -3,7 +3,6 @@ const mongoose = require('../libraries/mongoose');
 const Schema = mongoose.Schema;
 
 const TreeSchema = new Schema({
-  id: String,
   familyId: String,
   name: String,
   version: Number,
