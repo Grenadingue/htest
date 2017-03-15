@@ -89,7 +89,7 @@ function selectValidNodeFromInput(inputNode) {
   return grammarModel.abstractNode;
 }
 
-function validateNodeObject(nodeObject, level = 0) {
+function validateNodeObject(nodeObject, allowNodeReferences, level = 0) {
   return new Promise((fulfill, reject) => {
     const validNode = selectValidNodeFromInput(nodeObject);
     const nodeAttrsValidity = validateObject(nodeObject, validNode);
@@ -100,27 +100,49 @@ function validateNodeObject(nodeObject, level = 0) {
         return reject();
       }
     }
-    if ('branches' in nodeObject) {
-      validateNodesObject(nodeObject.branches, fulfill, reject, level);
+    if (allowNodeReferences && '_id' in nodeObject) {
+      let count = 0;
+      for (const key in nodeObject) {
+        if (Object.prototype.hasOwnProperty.call(nodeObject, key)) {
+          count += 1;
+        }
+      }
+      if (count !== 2) {
+        nodeObject.validationError = {
+          validity: false,
+          key: '_id',
+          reason: 'must be used alongside \'name\' exclusively',
+        };
+        return reject();
+      }
+    // } else if ('_id' in nodeObject) {
+    //   nodeObject.validationError = {
+    //     validity: false,
+    //     key: '_id',
+    //     reason: 'cannot be used accross families',
+    //   };
+    //   return reject();
+    } else if ('branches' in nodeObject) {
+      validateNodesObject(nodeObject.branches, allowNodeReferences, fulfill, reject, level);
       return undefined;
     }
     return fulfill();
   });
 }
 
-function validateNodesObject(nodesObject, fulfill, reject, level = 0, i = 0) {
+function validateNodesObject(nodesObject, allowNodeReferences, fulfill, reject, level = 0, i = 0) {
   const node = nodesObject[i];
 
   if (i === nodesObject.length) {
     return fulfill();
   }
-  validateNodeObject(node, level + 1).then(() => {
-    validateNodesObject(nodesObject, fulfill, reject, level, i + 1);
+  validateNodeObject(node, allowNodeReferences, level + 1).then(() => {
+    validateNodesObject(nodesObject, allowNodeReferences, fulfill, reject, level, i + 1);
   }).catch(() => reject());
   return undefined;
 }
 
-function validateTreeObject(inputTree) {
+function validateTreeObject(inputTree, allowNodeReferences) {
   return new Promise((fulfill, reject) => {
     const treeAttrsValidity = validateObject(inputTree, grammarModel.tree);
 
@@ -135,10 +157,10 @@ function validateTreeObject(inputTree) {
   });
 }
 
-function validateTree(inputTree) {
+function validateTree(inputTree, allowNodeReferences) {
   return new Promise((fulfill, reject) => {
-    validateTreeObject(inputTree).then(() => {
-      validateNodesObject(inputTree.root, fulfill, reject);
+    validateTreeObject(inputTree, allowNodeReferences).then(() => {
+      validateNodesObject(inputTree.root, allowNodeReferences, fulfill, reject);
     }).catch((error) => reject(error));
   });
 }
@@ -179,9 +201,9 @@ function retrieveTreeValidationError(tree) {
   return retrieveNodesValidationError(tree.root, `${currentPath}root`);
 }
 
-function validateTreeAndRetrieveErrors(tree) {
+function validateTreeAndRetrieveErrors(tree, allowNodeReferences) {
   return new Promise((fulfill, reject) => {
-    validateTree(tree).then(() => {
+    validateTree(tree, allowNodeReferences).then(() => {
       fulfill(tree);
     }).catch((error) => {
       if (error !== undefined) {
@@ -195,6 +217,8 @@ function validateTreeAndRetrieveErrors(tree) {
         reject(`${treeError.reason} '${treeError.key}' of type '${treeError.dataType}' with value '${treeError.value}' at '${treeError.path}'`);
       } else if ('reason' in treeError && 'key' in treeError && 'dataTypes' in treeError && 'expected' in treeError.dataTypes && 'path' in treeError) {
         reject(`${treeError.reason} '${treeError.key}' of type '${treeError.dataTypes.expected}' at '${treeError.path}'`);
+      } else if ('reason' in treeError && 'key' in treeError && 'path' in treeError) {
+        reject(`'${treeError.key}' ${treeError.reason} at '${treeError.path}'`);
       } else {
         reject(JSON.stringify(treeError));
       }

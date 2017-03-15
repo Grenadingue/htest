@@ -54,9 +54,9 @@ module.exports.serveTreeAsFile = (parameters) => new Promise((fulfill, reject) =
   }
 });
 
-module.exports.validateNewTree = (filePath) => new Promise((fulfill, reject) => { // validate new tree
+module.exports.validate = (filePath, allowNodeReferences) => new Promise((fulfill, reject) => { // validate new tree
   jsonLoader(filePath).then((rawTree) => {
-    treeGrammar.validate(rawTree).then((validatedTree) => {
+    treeGrammar.validate(rawTree, allowNodeReferences).then((validatedTree) => {
       fulfill(validatedTree);
     }).catch((error) => {
       reject(error);
@@ -66,4 +66,4 @@ module.exports.validateNewTree = (filePath) => new Promise((fulfill, reject) => 
   });
 });
 
-module.exports.saveNewTree = (rawTree) => treeSaver.save(rawTree);
+module.exports.save = (rawTree) => treeSaver.save(rawTree);

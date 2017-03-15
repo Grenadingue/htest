@@ -437,15 +437,19 @@
       console.log('upload success:', data.success);
       console.log(data.file);
       if (data.success) {
-        retrieveNewVersionFileValidation(data.file);
+        const selectedParent = document.querySelectorAll('#parent-selector :checked')[0];
+        const familyId = selectedParent.id.substring('parent-selector-'.length, selectedParent.id.length);
+        retrieveNewVersionFileValidation(data.file, familyId);
       } else {
         displayNewTreeVersionFileValidationStatus('failure', 'Unknown error occured during upload');
       }
     }
 
     function submitNewTreeVersionClicked(data) {
+      const selectedParent = document.querySelectorAll('#parent-selector :checked')[0];
+      const familyId = selectedParent.id.substring('parent-selector-'.length, selectedParent.id.length);
       console.log('submitNewTreeVersionClicked');
-      retrieveNewTreeVersionSubmissionStatus();
+      retrieveNewTreeVersionSubmissionStatus(familyId);
     }
 
     //
@@ -638,7 +642,7 @@
       socket.emit(eventName, { id: familyId });
     }
 
-    function retrieveNewVersionFileValidation(file) {
+    function retrieveNewVersionFileValidation(file, familyId) {
       const eventName = 'validate-new-tree-version-data';
 
       console.log('retrieveNewVersionFileValidation', file);
@@ -657,10 +661,10 @@
           displayNewTreeVersionFileValidationStatus('failure', 'Unknown error');
         }
       });
-      socket.emit(eventName, { clientId: state.clientId, fileId: file.id });
+      socket.emit(eventName, { clientId: state.clientId, fileId: file.id, familyId: familyId });
     }
 
-    function retrieveNewTreeVersionSubmissionStatus() {
+    function retrieveNewTreeVersionSubmissionStatus(familyId) {
       const eventName = 'submit-new-tree-version';
 
       console.log('retrieveNewTreeVersionSubmissionStatus');
@@ -676,7 +680,7 @@
           }
         }
       });
-      socket.emit(eventName, { clientId: state.clientId });
+      socket.emit(eventName, { clientId: state.clientId, familyId: familyId });
     }
 
     //

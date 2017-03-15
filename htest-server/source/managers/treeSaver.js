@@ -1,3 +1,4 @@
+const mongoose = require('../libraries/mongoose');
 const AbstractNode = require('../models/AbstractNode').Model;
 const AnswerConsequence = require('../models/AnswerConsequence').Model;
 const ProcedureNode = require('../models/ProcedureNode').Model;
@@ -22,15 +23,20 @@ function createAndPopulateAnswerConsequences(inputAnswerConsequences, treePieces
 
 function selectValidNodeModel(inputNode) {
   if ('target' in inputNode) {
-    return new PointerNode();
+    return PointerNode;
   } else if ('instruction' in inputNode || 'question' in inputNode || 'answerPossibilities' in inputNode || 'answerConsequences' in inputNode) {
-    return new ProcedureNode();
+    return ProcedureNode;
   }
-  return new AbstractNode();
+  return AbstractNode;
 }
 
 function createAndPopulateNode(inputNode, treePieces) {
-  const node = selectValidNodeModel(inputNode);
+  if ('_id' in inputNode) {
+    return mongoose.Types.ObjectId(inputNode._id);
+  }
+
+  const NodeType = selectValidNodeModel(inputNode);
+  const node = new NodeType();
 
   for (const key in inputNode) {
     const nodeAttr = inputNode[key];
@@ -56,11 +62,17 @@ function createAndPopulateNode(inputNode, treePieces) {
 function saveTreePieces(treePieces, fulfill, reject, i = 0) {
   if (i !== treePieces.length) {
     const treePiece = treePieces[i];
-    treePiece.save().then(() => {
+
+    if (Object.prototype.toString.call(treePiece) === Object.prototype.toString.call(new mongoose.Types.ObjectId())) {
       saveTreePieces(treePieces, fulfill, reject, i + 1);
-    }).catch((error) => {
-      reject(error);
-    });
+    } else {
+      treePiece.save().then(() => {
+        saveTreePieces(treePieces, fulfill, reject, i + 1);
+      }).catch((error) => {
+        reject(error);
+      });
+    }
+
   } else {
     fulfill(treePieces[0]); // `Tree` from saveTree()
   }

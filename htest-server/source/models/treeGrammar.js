@@ -3,7 +3,6 @@ const validAnswerPossibilities = [String];
 const validAnswerConsequences = [String, Boolean];
 
 const validTree = {
-  _id: { mandatory: false, dataType: String },
   familyId: { mandatory: false, dataType: String },
   name: { mandatory: true, dataType: String },
   version: { mandatory: false, dataType: Number },

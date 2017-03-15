@@ -73,27 +73,26 @@ module.exports.validateNewTreeData = (parameters) => new Promise((fulfill, rejec
   console.log('testTreesLibrary controller:\tvalidateNewTreeData()');
   console.log(parameters);
   if (parameters && 'clientId' in parameters) {
-    const file = fileUploader.getLastUploadFromClientId(parameters.clientId);
-    if (file !== undefined && file.success === true) {
-      trees.validateNewTree(file.pathName).then(() => {
+    fileUploader.getLastUploadFromClientId(parameters.clientId).then((file) => {
+      trees.validate(file.pathName, false).then(() => {
         fulfill({ message: `'${file.name}': success` });
       }).catch((error) => {
         console.log(error);
         reject({ message: `'${file.name}': ${error}` });
       });
-    } else {
-      reject({ message: `'${file.name}': upload error (max upload size 16 MB)` });
-    }
+    }).catch((error) => {
+      reject({ message: error });
+    });
   } else {
     reject({ message: 'invalid input parameters' });
   }
 });
 
-function saveNewTreeFamily(inputFile, familyName) {
+function createNewTreeFamily(inputFile, familyName) {
   return new Promise((fulfill, reject) => {
-    trees.validateNewTree(inputFile).then((rawTree) => {
+    trees.validate(inputFile).then((rawTree) => {
       rawTree.version = 1;
-      trees.saveNewTree(rawTree).then((tree) => {
+      trees.save(rawTree).then((tree) => {
         const family = new TreeFamily();
         family.name = familyName;
         family.trees.push(tree);
@@ -117,11 +116,14 @@ module.exports.processNewTreeSubmission = (parameters) => new Promise((fulfill, 
   console.log('testTreesLibrary controller:\tprocessNewTreeSubmission()');
   console.log(parameters);
   if (parameters && 'clientId' in parameters && 'familyName' in parameters && typeof parameters.familyName === 'string') {
-    const inputFile = fileUploader.getLastUploadFromClientId(parameters.clientId).pathName;
-    saveNewTreeFamily(inputFile, parameters.familyName).then(() => {
-      fulfill();
+    fileUploader.getLastUploadFromClientId(parameters.clientId).then((file) => {
+      createNewTreeFamily(file.pathName, parameters.familyName).then(() => {
+        fulfill();
+      }).catch((error) => {
+        reject(error);
+      });
     }).catch((error) => {
-      reject(error);
+      reject({ message: error });
     });
   } else {
     reject({ message: 'invalid input parameters' });
@@ -131,23 +133,66 @@ module.exports.processNewTreeSubmission = (parameters) => new Promise((fulfill, 
 module.exports.validateNewTreeVersionData = (parameters) => new Promise((fulfill, reject) => { // validate adding tree to existing family
   console.log('testTreesLibrary controller:\tvalidateNewTreeVersionData()');
   console.log(parameters);
-  // if (parameters) {
-  //   fulfill({ message: 'fake success' });
-  // } else {
-  //   reject({ message: 'fake error' });
-  // }
-  reject({ message: 'fake error' });
+  if (parameters && 'clientId' in parameters && 'familyId' in parameters && typeof parameters.familyId === 'string') {
+    fileUploader.getLastUploadFromClientId(parameters.clientId).then((file) => {
+      trees.validate(file.pathName, true).then(() => {
+        fulfill({ message: `'${file.name}': success` });
+      }).catch((error) => {
+        console.log(error);
+        reject({ message: `'${file.name}': ${error}` });
+      });
+    }).catch((error) => {
+      console.log(error);
+      reject({ message: error });
+    });
+  } else {
+    reject({ message: 'invalid input parameters' });
+  }
 });
+
+function addTreeToFamily(inputFile, familyId) {
+  return new Promise((fulfill, reject) => {
+    TreeFamily.findById(familyId).then((family) => {
+      trees.validate(inputFile, true).then((rawTree) => {
+        rawTree.version = 42;
+        trees.save(rawTree).then((tree) => {
+          family.trees.push(tree);
+          family.save().then(() => {
+            fulfill();
+          }).catch((error) => {
+            console.log(error);
+            reject({ message: error });
+          });
+        }).catch((error) => {
+          console.log(error);
+          reject({ message: error });
+        });
+      }).catch((error) => {
+        console.log(error);
+        reject({ message: error });
+      });
+    }).catch(() => {
+      reject({ message: 'tree family not found' });
+    });
+  });
+}
 
 module.exports.processNewTreeVersionSubmission = (parameters) => new Promise((fulfill, reject) => { // add tree to existing family
   console.log('testTreesLibrary controller:\tprocessNewTreeVersionSubmission()');
   console.log(parameters);
-  // if (parameters) {
-  //   fulfill({ message: 'fake success', familyId: lolDatabase.trees[0].familyId });
-  // } else {
-  //   reject({ message: 'fake error' });
-  // }
-  reject({ message: 'fake error' });
+  if (parameters && 'clientId' in parameters && 'familyId' in parameters && typeof parameters.familyId === 'string') {
+    fileUploader.getLastUploadFromClientId(parameters.clientId).then((file) => {
+      addTreeToFamily(file.pathName, parameters.familyId).then(() => {
+        fulfill();
+      }).catch((error) => {
+        reject(error);
+      });
+    }).catch((error) => {
+      reject({ message: error });
+    });
+  } else {
+    reject({ message: 'invalid input parameters' });
+  }
 });
 
 module.exports.onFileUploadSuccess = fileUploader.onSaved;
