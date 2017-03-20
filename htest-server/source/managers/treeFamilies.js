@@ -92,10 +92,11 @@ function createNewTreeFamily(inputFile, familyName) {
   return new Promise((fulfill, reject) => {
     trees.validate(inputFile).then((rawTree) => {
       rawTree.version = 1;
-      trees.save(rawTree).then((tree) => {
+      trees.save(rawTree).then((treeObject) => {
         const family = new TreeFamily();
         family.name = familyName;
-        family.trees.push(tree);
+        family.trees.push(treeObject.tree);
+        family.references.push([]);
         family.save().then(() => {
           fulfill();
         }).catch((error) => {
@@ -155,10 +156,11 @@ function addTreeToFamily(inputFile, familyId) {
     TreeFamily.findById(familyId).then((family) => {
       trees.validate(inputFile, true).then((rawTree) => {
         rawTree.version = 42;
-        trees.save(rawTree).then((tree) => {
-          family.trees.push(tree);
+        trees.save(rawTree).then((treeObject) => {
+          family.trees.push(treeObject.tree);
+          family.references.push(treeObject.references);
           family.save().then(() => {
-            fulfill();
+            fulfill(family);
           }).catch((error) => {
             console.log(error);
             reject({ message: error });
@@ -182,8 +184,8 @@ module.exports.processNewTreeVersionSubmission = (parameters) => new Promise((fu
   console.log(parameters);
   if (parameters && 'clientId' in parameters && 'familyId' in parameters && typeof parameters.familyId === 'string') {
     fileUploader.getLastUploadFromClientId(parameters.clientId).then((file) => {
-      addTreeToFamily(file.pathName, parameters.familyId).then(() => {
-        fulfill();
+      addTreeToFamily(file.pathName, parameters.familyId).then((family) => {
+        fulfill({ familyId: family._id });
       }).catch((error) => {
         reject(error);
       });

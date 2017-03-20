@@ -1,4 +1,3 @@
-const mongoose = require('../libraries/mongoose');
 const AbstractNode = require('../models/AbstractNode').Model;
 const AnswerConsequence = require('../models/AnswerConsequence').Model;
 const ProcedureNode = require('../models/ProcedureNode').Model;
@@ -30,9 +29,9 @@ function selectValidNodeModel(inputNode) {
   return AbstractNode;
 }
 
-function createAndPopulateNode(inputNode, treePieces) {
+function createAndPopulateNode(inputNode, treePieces, existingPieces) {
   if ('_id' in inputNode) {
-    return mongoose.Types.ObjectId(inputNode._id);
+    return existingPieces.map[inputNode._id];
   }
 
   const NodeType = selectValidNodeModel(inputNode);
@@ -51,7 +50,7 @@ function createAndPopulateNode(inputNode, treePieces) {
   }
   if (inputNode.branches) {
     inputNode.branches.forEach((inputBranchNode) => {
-      const branchNode = createAndPopulateNode(inputBranchNode, treePieces);
+      const branchNode = createAndPopulateNode(inputBranchNode, treePieces, existingPieces);
       node.branches.push(branchNode);
       treePieces.push(branchNode);
     });
@@ -59,43 +58,83 @@ function createAndPopulateNode(inputNode, treePieces) {
   return node;
 }
 
-function saveTreePieces(treePieces, fulfill, reject, i = 0) {
+function saveTreePieces(treePieces, existingPieces, fulfill, reject, i = 0) {
   if (i !== treePieces.length) {
     const treePiece = treePieces[i];
 
-    if (Object.prototype.toString.call(treePiece) === Object.prototype.toString.call(new mongoose.Types.ObjectId())) {
-      saveTreePieces(treePieces, fulfill, reject, i + 1);
-    } else {
-      treePiece.save().then(() => {
-        saveTreePieces(treePieces, fulfill, reject, i + 1);
-      }).catch((error) => {
-        reject(error);
-      });
-    }
-
+    treePiece.save().then(() => {
+      saveTreePieces(treePieces, existingPieces, fulfill, reject, i + 1);
+    }).catch((error) => {
+      reject(error);
+    });
   } else {
-    fulfill(treePieces[0]); // `Tree` from saveTree()
+    fulfill({ tree: treePieces[0], references: existingPieces.array }); // `Tree` from saveTree()
   }
+}
+
+function findAndRetrieveExistingNodes(inputNode, existingPiecesIds) {
+  if ('_id' in inputNode) {
+    existingPiecesIds.push(inputNode._id);
+  } else if ('branches' in inputNode) {
+    inputNode.branches.forEach((inputBranchNode) => {
+      findAndRetrieveExistingNodes(inputBranchNode, existingPiecesIds);
+    });
+  }
+}
+
+function findAndRetrieveExistingPieces(tree) {
+  return new Promise((fulfill, reject) => {
+    let existingPiecesIds = [];
+    const existingPieces = {};
+
+    tree.root.forEach((rootNode) => {
+      findAndRetrieveExistingNodes(rootNode, existingPiecesIds);
+    });
+    existingPiecesIds = Array.from(new Set(existingPiecesIds)); // remove duplicates
+    if (existingPiecesIds.length !== 0) {
+      for (const key in existingPiecesIds) {
+        AbstractNode.findById(existingPiecesIds[key]).then((existingPiece) => {
+          if (!existingPiece) {
+            reject(`ObjectId ${existingPiecesIds[key]} not found`);
+          } else {
+            existingPieces[existingPiecesIds[key]] = existingPiece;
+            existingPiecesIds[key] = existingPiece;
+            if (Number(key) === existingPiecesIds.length - 1) {
+              fulfill({ map: existingPieces, array: existingPiecesIds });
+            }
+          }
+        }).catch((error) => {
+          reject(error);
+        });
+      }
+    } else {
+      fulfill({ map: existingPieces, array: existingPiecesIds });
+    }
+  });
 }
 
 function saveTree(inputTree) {
   return new Promise((fulfill, reject) => {
-    const tree = new Tree();
-    const treePieces = [];
+    findAndRetrieveExistingPieces(inputTree).then((existingPieces) => {
+      const tree = new Tree();
+      const treePieces = [];
 
-    treePieces.push(tree);
-    for (const key in inputTree) {
-      const treeAttr = inputTree[key];
-      if (key !== 'root') {
-        tree[key] = treeAttr;
+      treePieces.push(tree);
+      for (const key in inputTree) {
+        const treeAttr = inputTree[key];
+        if (key !== 'root') {
+          tree[key] = treeAttr;
+        }
       }
-    }
-    inputTree.root.forEach((rootNode) => {
-      const node = createAndPopulateNode(rootNode, treePieces);
-      tree.root.push(node);
-      treePieces.push(node);
+      inputTree.root.forEach((rootNode) => {
+        const node = createAndPopulateNode(rootNode, treePieces, existingPieces);
+        tree.root.push(node);
+        treePieces.push(node);
+      });
+      saveTreePieces(treePieces, existingPieces, fulfill, reject);
+    }).catch((error) => {
+      reject(error);
     });
-    saveTreePieces(treePieces, fulfill, reject);
   });
 }
 

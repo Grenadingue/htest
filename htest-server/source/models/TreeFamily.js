@@ -5,6 +5,7 @@ const Schema = mongoose.Schema;
 const TreeFamilySchema = new Schema({
   name: String,
   trees: [{ type: Schema.ObjectId, ref: 'tree' }],
+  references: [[{ type: Schema.ObjectId, ref: 'abstractNode' }]],
 });
 
 function autoPopulateFamily(next) {
