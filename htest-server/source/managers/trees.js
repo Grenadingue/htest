@@ -3,6 +3,7 @@ const jsonLoader = require('./jsonLoader');
 const treeGrammar = require('./treeGrammar');
 const treeSaver = require('./treeSaver');
 const treeExtractor = require('./treeExtractor');
+const treeRemover = require('./treeRemover');
 
 module.exports.retrieveTreeFromId = (parameters) => new Promise((fulfill, reject) => { // retrieve tree version
   console.log('testTreesLibrary controller:\tretrieveTreeFromId()');
@@ -11,20 +12,26 @@ module.exports.retrieveTreeFromId = (parameters) => new Promise((fulfill, reject
     Tree.findById(parameters.id).then((tree) => {
       fulfill({ tree });
     }).catch(() => {
-      reject({ error: 'unavailable tree requested' });
+      reject({ message: 'unavailable tree requested' });
     });
   } else {
-    reject({ error: 'invalid input parameters' });
+    reject({ message: 'invalid input parameters' });
   }
 });
 
 module.exports.deleteTreeFromId = (parameters) => new Promise((fulfill, reject) => { // delete tree version
   console.log('testTreesLibrary controller:\tdeleteTreeFromId()');
   console.log(parameters);
-  if (parameters) {
-    fulfill({ message: 'fake success' });
+  if (parameters && ('id' in parameters)) {
+    // before removal we are supposed to check if a tree is used from the machines tests library
+    // do this missing check right here
+    treeRemover.removeFromId(parameters.id).then(() => {
+      fulfill();
+    }).catch((error) => {
+      reject({ message: error });
+    });
   } else {
-    reject({ message: 'fake error' });
+    reject({ message: 'invalid input parameters' });
   }
 });
 
