@@ -115,7 +115,7 @@ This file intents to cover the entire description of the `htest-server` API
 {
   protocol: 'socket.io', event: 'connection',
   input: {}, // no input parameter
-  output: {}, // no output parameter
+  output: {}, // no output
 }
 ```
 
@@ -125,7 +125,7 @@ This file intents to cover the entire description of the `htest-server` API
 {
   protocol: 'socket.io', event: '/test-trees-library',
   input: {}, // no input parameter
-  output: {}, // no output parameter
+  output: {}, // no output
 }
 ```
 
@@ -135,7 +135,7 @@ This file intents to cover the entire description of the `htest-server` API
 {
   protocol: 'socket.io', event: '/test-procedures-library',
   input: {}, // no input parameter
-  output: {}, // no output parameter
+  output: {}, // no output
 }
 ```
 
@@ -145,7 +145,7 @@ This file intents to cover the entire description of the `htest-server` API
 {
   protocol: 'socket.io', event: '/machines-tests',
   input: {}, // no input parameter
-  output: {}, // no output parameter
+  output: {}, // no output
 }
 ```
 
@@ -153,21 +153,28 @@ This file intents to cover the entire description of the `htest-server` API
 > Send a file selected by the user, from the file-system, through `socketio-file-upload`, overlapping `socket.io`
 ```js
 {
-  protocol: 'socketio-file-upload', event: undefined, // hidden event name
-  input: {}, // no input parameter
-  output: {}, // no output parameter
+  protocol: 'socketio-file-upload',
+  event: undefined, input: {}, // no input parameter
+  outputEvent: undefined, output: {}, // no output
 }
 ```
-
 
 ### Retrieve available tree families `socket.io` `'retrieve-available-trees'`
 > Foo
 ```js
 {
-  protocol: 'socket.io', event: 'retrieve-available-trees',
-  input: {}, // no input parameter
-  outputEvent: 'retrieve-available-trees-response',
-  output: {}, // no output parameter
+  protocol: 'socket.io',
+  event: 'retrieve-available-trees', input: {}, // no input parameter
+  outputEvent: 'retrieve-available-trees-response', output: {
+    ifSuccess: {
+      status: 'success',
+      trees: [{ familyId: '', name: '' }],
+    },
+    ifError: {
+      status: 'failure',
+      message: '',
+    },
+  },
 }
 ```
 
@@ -175,10 +182,20 @@ This file intents to cover the entire description of the `htest-server` API
 > Foo
 ```js
 {
-  protocol: 'socket.io', event: 'validate-new-tree-family-name',
-  input: {}, // no input parameter
-  outputEvent: 'validate-new-tree-family-name-response',
-  output: {}, // no output parameter
+  protocol: 'socket.io',
+  event: 'validate-new-tree-family-name', input: {
+    name: '',
+  },
+  outputEvent: 'validate-new-tree-family-name-response', output: {
+    ifSuccess: {
+      status: 'success',
+      message: '',
+    },
+    ifError: {
+      status: 'failure',
+      message: '',
+    },
+  },
 }
 ```
 
@@ -186,10 +203,19 @@ This file intents to cover the entire description of the `htest-server` API
 > Foo
 ```js
 {
-  protocol: 'socket.io', event: 'validate-new-tree-data',
-  input: {}, // no input parameter
-  outputEvent: 'validate-new-tree-data-response',
-  output: {}, // no output parameter
+  protocol: 'socket.io',
+  event: 'validate-new-tree-data', input: {
+    clientId: '', // socket.io client id
+  },
+  outputEvent: 'validate-new-tree-data-response', output: {
+    ifSuccess: {
+      status: 'success',
+      message: '',
+    },
+    ifError: {
+      status: 'failure',
+      message: '',
+    },
 }
 ```
 
@@ -197,10 +223,20 @@ This file intents to cover the entire description of the `htest-server` API
 > Foo
 ```js
 {
-  protocol: 'socket.io', event: 'submit-new-tree',
-  input: {}, // no input parameter
-  outputEvent: 'submit-new-tree-response',
-  output: {}, // no output parameter
+  protocol: 'socket.io',
+  event: 'submit-new-tree', input: {
+    clientId: '',
+    familyName: '',
+  },
+  outputEvent: 'submit-new-tree-response', output: {
+    ifSuccess: {
+      status: 'success',
+    },
+    ifError: {
+      status: 'failure',
+      message: '',
+    },
+  },
 }
 ```
 
@@ -208,10 +244,19 @@ This file intents to cover the entire description of the `htest-server` API
 > Foo
 ```js
 {
-  protocol: 'socket.io', event: 'delete-trees-from-family-id',
-  input: {}, // no input parameter
-  outputEvent: 'delete-trees-from-family-id-response',
-  output: {}, // no output parameter
+  protocol: 'socket.io',
+  event: 'delete-trees-from-family-id', input: {
+    familyId: '',
+  },
+  outputEvent: 'delete-trees-from-family-id-response', output: {
+    ifSuccess: {
+      status: 'success',
+    },
+    ifError: {
+      status: 'failure',
+      message: '',
+    },
+  },
 }
 ```
 
@@ -219,10 +264,22 @@ This file intents to cover the entire description of the `htest-server` API
 > Foo
 ```js
 {
-  protocol: 'socket.io', event: 'retrieve-trees-from-family-id',
-  input: {}, // no input parameter
-  outputEvent: 'retrieve-trees-from-family-id-response',
-  output: {}, // no output parameter
+  protocol: 'socket.io',
+  event: 'retrieve-trees-from-family-id', input: {
+    id: '', // family id
+  },
+  outputEvent: 'retrieve-trees-from-family-id-response', output: {
+    ifSuccess: {
+      status: 'success',
+      familyId: '',
+      familyName: '',
+      trees: [{ id: '', name: '', version: 1 }],
+    },
+    ifError: {
+      status: 'failure',
+      message: '',
+    },
+  },
 }
 ```
 
@@ -230,10 +287,21 @@ This file intents to cover the entire description of the `htest-server` API
 > Foo
 ```js
 {
-  protocol: 'socket.io', event: 'validate-new-tree-version-data',
-  input: {}, // no input parameter
-  outputEvent: 'validate-new-tree-version-data-response',
-  output: {}, // no output parameter
+  protocol: 'socket.io',
+  event: 'validate-new-tree-version-data', input: {
+    clientId: '',
+    familyId: '',
+  },
+  outputEvent: 'validate-new-tree-version-data-response', output: {
+    ifSuccess: {
+      status: 'success',
+      message: '',
+    },
+    ifError: {
+      status: 'failure',
+      message: '',
+    },
+  },
 }
 ```
 
@@ -241,10 +309,21 @@ This file intents to cover the entire description of the `htest-server` API
 > Foo
 ```js
 {
-  protocol: 'socket.io', event: 'submit-new-tree-version',
-  input: {}, // no input parameter
-  outputEvent: 'submit-new-tree-version-response',
-  output: {}, // no output parameter
+  protocol: 'socket.io',
+  event: 'submit-new-tree-version', input: {
+    clientId: '',
+    familyId: '',
+  },
+  outputEvent: 'submit-new-tree-version-response', output: {
+    ifSuccess: {
+      status: 'success',
+      familyId: '',
+    },
+    ifError: {
+      status: 'failure',
+      message: '',
+    },
+  },
 }
 ```
 
@@ -252,10 +331,19 @@ This file intents to cover the entire description of the `htest-server` API
 > Foo
 ```js
 {
-  protocol: 'socket.io', event: 'delete-tree-from-id',
-  input: {}, // no input parameter
-  outputEvent: 'delete-tree-from-id-response',
-  output: {}, // no output parameter
+  protocol: 'socket.io',
+  event: 'delete-tree-from-id', input: {
+    id: '', // tree id
+  },
+  outputEvent: 'delete-tree-from-id-response', output: {
+    ifSuccess: {
+      status: 'success',
+    },
+    ifError: {
+      status: 'failure',
+      message: '',
+    },
+  },
 }
 ```
 
@@ -263,9 +351,24 @@ This file intents to cover the entire description of the `htest-server` API
 > Foo
 ```js
 {
-  protocol: 'socket.io', event: 'retrieve-tree-from-id',
-  input: {}, // no input parameter
-  outputEvent: 'retrieve-tree-from-id-response',
-  output: {}, // no output parameter
+  protocol: 'socket.io',
+  event: 'retrieve-tree-from-id', input: {
+    id: '', // tree id
+  },
+  outputEvent: 'retrieve-tree-from-id-response', output: {
+    ifSuccess: {
+      status: 'success',
+      tree: {
+        familyId: '',
+        name: '',
+        version: 1,
+        root: [], // tree nodes, see ../models/*Node.js
+      },
+    },
+    ifError: {
+      status: 'failure',
+      message: '',
+    },
+  },
 }
 ```
