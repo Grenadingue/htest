@@ -98,9 +98,10 @@ module.exports.validateNewTreeData = (parameters) => new Promise((fulfill, rejec
 function createNewTreeFamily(inputFile, familyName) {
   return new Promise((fulfill, reject) => {
     trees.validate(inputFile).then((rawTree) => {
-      rawTree.version = 1;
+      const family = new TreeFamily();
+      rawTree.version = ('version' in rawTree ? rawTree.version : 1);
+      rawTree.familyId = family._id;
       trees.save(rawTree).then((treeObject) => {
-        const family = new TreeFamily();
         family.name = familyName;
         family.trees.push(treeObject.tree);
         family.references.push([]);
@@ -162,7 +163,8 @@ function addTreeToFamily(inputFile, familyId) {
   return new Promise((fulfill, reject) => {
     TreeFamily.findById(familyId).then((family) => {
       trees.validate(inputFile, true).then((rawTree) => {
-        rawTree.version = 42;
+        rawTree.version = ('version' in rawTree ? rawTree.version : family.trees[family.trees.length - 1].version + 1);
+        rawTree.familyId = family._id;
         trees.save(rawTree).then((treeObject) => {
           family.trees.push(treeObject.tree);
           family.references.push(treeObject.references);
