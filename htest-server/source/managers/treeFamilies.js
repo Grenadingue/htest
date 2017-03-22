@@ -1,5 +1,6 @@
 const fileUploader = require('../managers/fileUploader');
 const TreeFamily = require('../models/TreeFamily').Model;
+const removeTreeFamilyFromId = require('../managers/treeFamilyRemover').removeFromId;
 const trees = require('./trees');
 
 module.exports.retrieveAvailableTrees = () => new Promise((fulfill, reject) => { // retrieve tree families
@@ -43,12 +44,18 @@ module.exports.retrieveTreesFromFamilyId = (parameters) => new Promise((fulfill,
 module.exports.deleteTreesFromFamilyId = (parameters) => new Promise((fulfill, reject) => { // delete tree family
   console.log('testTreesLibrary controller:\tdeleteTreesFromFamilyId()');
   console.log(parameters);
-//   if (parameters) {
-//     fulfill({ message: 'fake success' });
-//   } else {
-//     reject({ message: 'fake error' });
-//   }
-  reject({ message: 'fake error' });
+  if (parameters && 'familyId' in parameters) {
+    // before removal we are supposed to check if a tree is used from the machines tests library
+    // do this missing check right here
+    removeTreeFamilyFromId(parameters.familyId).then(() => {
+      fulfill();
+    }).catch((error) => {
+      console.log(error);
+      reject({ message: error });
+    });
+  } else {
+    reject({ message: 'invalid input parameters' });
+  }
 });
 
 module.exports.validateNewTreeFamilyName = (parameters) => new Promise((fulfill, reject) => { // create tree family (with initial tree)

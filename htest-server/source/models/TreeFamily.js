@@ -18,6 +18,7 @@ TreeFamilySchema.statics.findAll = mongoose.promises.findAll;
 TreeFamilySchema.statics.findById = mongoose.promises.findById;
 TreeFamilySchema.statics.findByName = mongoose.promises.findByName;
 TreeFamilySchema.statics.save = mongoose.promises.save;
+TreeFamilySchema.statics.remove = mongoose.promises.remove;
 
 const TreeFamily = mongoose.model('treeFamily', TreeFamilySchema);
 

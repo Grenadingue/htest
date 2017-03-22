@@ -12,6 +12,7 @@ const ProcedureNodeSchema = new Schema({ // extends AbstractNodeSchema
 });
 
 ProcedureNodeSchema.statics.save = mongoose.promises.save;
+ProcedureNodeSchema.statics.remove = mongoose.promises.remove;
 
 const ProcedureNode = AbstractNode.discriminator('procedureNode', ProcedureNodeSchema);
 

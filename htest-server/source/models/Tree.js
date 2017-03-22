@@ -18,6 +18,7 @@ TreeSchema.pre('findOne', autoPopulateRoot);
 TreeSchema.statics.findAll = mongoose.promises.findAll;
 TreeSchema.statics.findById = mongoose.promises.findById;
 TreeSchema.statics.save = mongoose.promises.save;
+TreeSchema.statics.remove = mongoose.promises.remove;
 
 const Tree = mongoose.model('tree', TreeSchema);
 

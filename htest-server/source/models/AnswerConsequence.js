@@ -8,6 +8,7 @@ const AnswerConsequenceSchema = new Schema({
 });
 
 AnswerConsequenceSchema.statics.save = mongoose.promises.save;
+AnswerConsequenceSchema.statics.remove = mongoose.promises.remove;
 
 const AnswerConsequence = mongoose.model('answerConsequence', AnswerConsequenceSchema);
 

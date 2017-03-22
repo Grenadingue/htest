@@ -9,6 +9,7 @@ const PointerNodeSchema = new Schema({ // extends AbstractNodeSchema
 });
 
 PointerNodeSchema.statics.save = mongoose.promises.save;
+PointerNodeSchema.statics.remove = mongoose.promises.remove;
 
 const PointerNode = AbstractNode.discriminator('pointerNode', PointerNodeSchema);
 

@@ -38,6 +38,17 @@ function mongoosePromisifySave(MongooseModel) {
   });
 }
 
+function mongoosePromisifyRemove(MongooseModel, findRequest) {
+  return new Promise((fulfill, reject) => {
+    MongooseModel.remove(findRequest, (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      return fulfill(results);
+    });
+  });
+}
+
 function findAll() {
   return mongoosePromisifyFind(this, {});
 }
@@ -52,6 +63,10 @@ function findByName(name) {
 
 function save() {
   return mongoosePromisifySave(this);
+}
+
+function remove() {
+  return mongoosePromisifyRemove(this, { _id: this._id });
 }
 
 if (mongoose.promises !== undefined) {
@@ -69,4 +84,5 @@ module.exports.promises = {
   findById,
   findByName,
   save,
+  remove,
 };
