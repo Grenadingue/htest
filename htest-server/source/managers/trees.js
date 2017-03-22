@@ -4,17 +4,6 @@ const treeGrammar = require('./treeGrammar');
 const treeSaver = require('./treeSaver');
 const treeExtractor = require('./treeExtractor');
 
-// const lolDatabase = {
-//   trees: [
-//     { id: 0, familyId: 'a1', name: 'Foo tree', version: 1, raw: '<xml>raw tree data</xml>' },
-//     { id: 1, familyId: 'a1', name: 'Foo tree', version: 2, raw: '<xml>raw tree data</xml>' },
-//     { id: 2, familyId: 'b2', name: 'Bar tree', version: 1, raw: '<xml>raw tree data</xml>' },
-//     { id: 3, familyId: 'a1', name: 'Foo tree', version: 3, raw: '<xml>raw tree data</xml>' },
-//     { id: 4, familyId: 'c3', name: 'Baz tree', version: 1, raw: '<xml>raw tree data</xml>' },
-//     { id: 5, familyId: 'b2', name: 'Bar tree', version: 2, raw: '<xml>raw tree data</xml>' },
-//   ],
-// };
-
 module.exports.retrieveTreeFromId = (parameters) => new Promise((fulfill, reject) => { // retrieve tree version
   console.log('testTreesLibrary controller:\tretrieveTreeFromId()');
   console.log(parameters);
