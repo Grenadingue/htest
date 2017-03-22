@@ -1,5 +1,3 @@
-const util = require('util');
-
 const TreeFamily = require('../models/TreeFamily').Model;
 const Tree = require('../models/Tree').Model;
 
@@ -15,7 +13,6 @@ function findWholeNodesPieces(node, treeFamilyPieces, crossReferences) {
   if (crossReferences.indexOf(String(node._id)) !== -1) {
     return;
   }
-  console.log(String(node._id), 'passed');
   treeFamilyPieces.push(node);
   findAnswerConsequencesPieces(node, treeFamilyPieces);
   if ('branches' in node) {
@@ -67,8 +64,6 @@ function removeTree(id) {
       if (!tree) {
         reject(`Tree id ${id} not found`);
       }
-      console.log(util.format('%s', util.inspect(tree, { depth: Infinity })));
-      console.log();
       retrieveWholeFamily(tree.familyId).then((family) => {
         const allReferences = [];
         const treePiecesToDelete = [];
@@ -88,30 +83,22 @@ function removeTree(id) {
           allReferences[i] = String(allReferences[i]);
         }
         findWholeTreePieces(tree, treePiecesToDelete, allReferences);
-        console.log(allReferences);
-        console.log();
-        console.log(treePiecesToDelete);
-        console.log();
         removeAllTreePieces(treePiecesToDelete).then(() => {
           family.trees.splice(treeIndex, 1);
           family.references.splice(treeIndex, 1);
           family.save().then(() => {
             fulfill();
           }).catch((error) => {
-            console.log(error);
             reject(error);
           });
         }).catch((error) => {
-          console.log(error);
           reject(error);
         });
       }).catch((error) => {
-        console.log(error);
         reject(error);
       });
       fulfill();
     }).catch((error) => {
-      console.log(error);
       reject(error);
     });
   });
