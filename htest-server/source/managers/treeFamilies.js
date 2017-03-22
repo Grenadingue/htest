@@ -18,23 +18,25 @@ module.exports.retrieveAvailableTrees = () => new Promise((fulfill, reject) => {
 });
 
 module.exports.retrieveTreesFromFamilyId = (parameters) => new Promise((fulfill, reject) => { // retrieve tree family
-  const response = { familyId: undefined, trees: [] };
+  const response = { familyId: undefined, familyName: 'undefined', trees: [] };
 
   console.log('testTreesLibrary controller:\tretrieveTreesFromFamilyId()');
   console.log(parameters);
   if (parameters && parameters.id) {
     TreeFamily.findById(parameters.id).then((treeFamily) => {
-      response.familyId = treeFamily._id;
-      treeFamily.trees.forEach((tree) => {
-        response.trees.push({ id: tree._id, name: tree.name, version: tree.version });
-      });
-      if (response.trees.length !== 0) {
-        fulfill(response);
-      } else {
-        reject({ error: 'unavailable tree(s) requested' });
+      if (!treeFamily) {
+        reject({ message: `Tree family id ${parameters.id} not found` });
       }
+      response.familyId = treeFamily._id;
+      response.familyName = treeFamily.name;
+      if ('trees' in treeFamily) {
+        treeFamily.trees.forEach((tree) => {
+          response.trees.push({ id: tree._id, name: tree.name, version: tree.version });
+        });
+      }
+      fulfill(response);
     }).catch((error) => {
-      reject(error);
+      reject({ message: error });
     });
   } else {
     reject({ error: 'invalid input parameters' });

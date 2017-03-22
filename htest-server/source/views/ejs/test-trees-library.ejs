@@ -99,21 +99,23 @@
     function displayTreeFamily(data) {
       const pageWrapper = document.getElementById('page-wrapper-fluid');
       const createTreeBtn = create('button', { id: null, class: 'btn btn-primary', text: 'Add tree version', onClick: updateTreeFamilyClicked });
-      const tableResponsive = create('subSection', { title: `"${data.trees[0].name}" family` , id: 'tree-family-table' });
+      const tableResponsive = create('subSection', { title: `"${data.familyName}" family` , id: 'tree-family-table' });
       const tableHeadContent = [];
       const tableContent = [];
 
       clearPage();
       displayPageTitle(state.pageTitle);
-      createTreeBtn.treeFamily = { familyId: data.familyId, name: `${data.trees[0].name}` };
+      createTreeBtn.treeFamily = { familyId: data.familyId, name: `${data.familyName}` };
       pageWrapper.appendChild(createTreeBtn);
       displaySubSection(tableResponsive);
 
-      Object.keys(data.trees[0]).forEach((itemKey) => {
-        tableHeadContent.push(itemKey);
-      });
-      tableHeadContent.push('view tree version');
-      tableHeadContent.push('delete tree version');
+      if (data.trees.length !== 0) {
+        Object.keys(data.trees[0]).forEach((itemKey) => {
+          tableHeadContent.push(itemKey);
+        });
+        tableHeadContent.push('view tree version');
+        tableHeadContent.push('delete tree version');
+      }
 
       data.trees.forEach((line) => {
         const tableLine = [];
@@ -491,7 +493,7 @@
         if (response && response.status === 'success') {
           const trees = response.trees;
           console.log('retrieveAndDisplayTreeFamily: successfull response received', response);
-          if (trees && response.familyId === familyId) {
+          if (trees && 'familyName' in response && 'familyId' in response && response.familyId === familyId) {
             displayTreeFamily(response);
           }
         }
