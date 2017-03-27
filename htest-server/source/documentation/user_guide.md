@@ -62,11 +62,11 @@ You can see tree different buttons associated with the tree family, `View`, `Upd
 
 ![tree family actions](./images/tree_families_family_actions.png)
 
-A click on the `View` button will bring you to the family details view. More details on the tree family view [here](#tree-family-view).
+A click on the `View` button will bring you to the family details view. More details on the tree family view [here](#tree-family-view). To get back of this page, use the left panel to click on `Test tree library`.
 
 ![first tree family view](./images/first_tree_family_view.png)
 
-A click on the `Update` button will bring you to the family update view. More details on the tree family update view [here](#tree-family-update-view).
+A click on the `Update` button will bring you to the family update view. More details on the tree family update view [here](#tree-family-update-view). To get back of this page, use the left panel to click on `Test tree library`.
 
 ![first tree family update view](./images/tree_family_update_view.png)
 
