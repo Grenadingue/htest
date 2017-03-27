@@ -5,7 +5,6 @@ const express = require('express');
 const routes = {
   dashboard: '/index',
   testTreesLibrary: '/test-trees-library',
-  testProceduresLibrary: '/test-procedures-library',
   machinesTests: '/machines-tests',
 };
 
@@ -37,6 +36,5 @@ module.exports.init = (app) => {
 
   declarePage(app, routes.dashboard, '../views/ejs/dashboard.ejs', 'Dashboard');
   declarePage(app, routes.testTreesLibrary, '../views/ejs/test-trees-library.ejs', 'Test trees library');
-  declarePage(app, routes.testProceduresLibrary, '../views/ejs/test-procedures-library.ejs', 'Test procedures library');
   declarePage(app, routes.machinesTests, '../views/ejs/machines-tests.ejs', 'Machines tests');
 };

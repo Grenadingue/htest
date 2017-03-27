@@ -1,6 +1,7 @@
 <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
 <div class="collapse navbar-collapse navbar-ex1-collapse">
   <ul class="nav navbar-nav side-nav">
+
     <% var itemPath, itemState; %>
     <%
       itemPath = '/index';
@@ -9,6 +10,7 @@
     <li class="<%= itemState %>">
       <a href="<%= itemPath %>"><i class="fa fa-fw fa-home"></i> Dashboard</a>
     </li>
+
     <%
       itemPath = '/test-trees-library';
       itemState = (pagePath === itemPath ? 'active' : 'inactive');
@@ -16,13 +18,7 @@
     <li class="<%= itemState %>">
       <a href="<%= itemPath %>"><i class="fa fa-fw fa-tree"></i> Test trees library</a>
     </li>
-    <%
-      itemPath = '/test-procedures-library';
-      itemState = (pagePath === itemPath ? 'active' : 'inactive');
-    %>
-    <li class="<%= itemState %>">
-      <a href="<%= itemPath %>"><i class="fa fa-fw fa-table"></i> Test procedures library</a>
-    </li>
+
     <%
       itemPath = '/machines-tests';
       itemState = (pagePath === itemPath ? 'active' : 'inactive');
@@ -30,6 +26,7 @@
     <li class="<%= itemState %>">
       <a href="<%= itemPath %>"><i class="fa fa-fw fa-dashboard"></i> Machines tests</a>
     </li>
+
   </ul>
 </div>
 <!-- /.navbar-collapse -->
