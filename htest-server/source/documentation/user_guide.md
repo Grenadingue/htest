@@ -73,7 +73,23 @@ A click on the `Update` button will bring you to the family update view. More de
 A click on the `Delete` button will delete the whole family. Be careful there is no confirmation message before deletion!
 
 #### Tree family view
-Foo
+On a tree family view you are able to see all trees contained in a tree family, here `foohoohaha` family contains `super tree`.
+
+![first tree family view](./images/first_tree_family_view.png)
+
+You can see three different kinds of buttons associated with the family and its trees, `Add version`, `View` and `Delete`.
+
+![tree family view buttons](./images/tree_family_view_buttons.png)
+
+The `Add version` button will redirect you to the [tree family update view](#tree-family-update-view), the same view which is reachable from the tree families view, through the `Update` button.
+
+![first tree family update view](./images/tree_family_update_view.png)
+
+A click on the `View` button will give you access to a raw view of the tree's data.
+
+![raw tree view](./images/tree_raw_view.png)
+
+A click on the `Delete` button will delete the desired tree. Be careful there is no confirmation message before deletion!
 
 #### Tree family update view
 Bar
