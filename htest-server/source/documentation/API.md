@@ -2,7 +2,7 @@
 Application Programming Interface
 
 ## Description
-This file intents to cover the entire description of the `htest-server` API
+This file intends to cover the entire description of the `htest-server` API
 
 *__Note__: See `API_example.md` for details about API documentation*
 
