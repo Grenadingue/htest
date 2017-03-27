@@ -7,8 +7,7 @@ An hardware tester assistant, build on the top of a web server, designed for [Or
 *Warning: this project is currently not usable in a production environment, it lacks a major part of its development, the tests execution*
 
 ## User documentation
-### Use
-*Incoming...*
+See [`user guide`](htest-server/source/documentation/user_guide.md) *(in construction)*
 
 ## Technical documentation
 * __Compatibility__: Debian/Ubuntu and derivates
