@@ -52,6 +52,32 @@ Once every validation field reaches a successfull state, you can click on the `S
 
 ![submit tree family](./images/create_tree_family_submit.png)
 
+If everything goes well, you will reach the `Test trees library` page, the same as when you click on the button `Test trees library` on the left panel, but this time we can find the previously added tree family in a list.
+
+![first tree family](./images/tree_families_first_family.png)
+
+#### Tree families actions
+
+You can see tree different buttons associated with the tree family, `View`, `Update` and `Delete`.
+
+![tree family actions](./images/tree_families_family_actions.png)
+
+A click on the `View` button will bring you to the family details view. More details on the tree family view [here](#tree-family-view).
+
+![first tree family view](./images/first_tree_family_view.png)
+
+A click on the `Update` button will bring you to the family update view. More details on the tree family update view [here](#tree-family-update-view).
+
+![first tree family update view](./images/tree_family_update_view.png)
+
+A click on the `Delete` button will delete the whole family. Be careful there is no confirmation message before deletion!
+
+#### Tree family view
+Foo
+
+#### Tree family update view
+Bar
+
 ### Machines tests
 The machines tests page is not implemented, you cannot use it right now.
 
