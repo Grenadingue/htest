@@ -3,6 +3,8 @@
 ## Panels
 The panels are available on every single page of the website.
 
+![panels](./images/panels.png)
+
 ### Top panel
 On the top left corner, a click on `htest` will redirect you to the [dashboard](#dashboard).
 
