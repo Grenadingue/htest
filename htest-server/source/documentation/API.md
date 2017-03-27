@@ -14,7 +14,6 @@ This file intents to cover the entire description of the `htest-server` API
 | Web server root         | `GET`  | `/`                        |
 | Dashboard               | `GET`  | `/index`                   |
 | Test trees library      | `GET`  | `/test-trees-library`      |
-| Test procedures library | `GET`  | `/test-procedures-library` |
 | Machines tests          | `GET`  | `/machines-tests`          |
 
 #### `socket.io` events
@@ -25,7 +24,6 @@ This file intents to cover the entire description of the `htest-server` API
 |--------------------------------------------------|-------------------------------------|
 | User has loaded a web page                       | `'connection'`                      |
 | User has loaded test trees library web page      | `'/test-trees-library'`             |
-| User has loaded test procedures library web page | `'/test-procedures-library'`        |
 | User has loaded machines tests web page          | `'/machines-tests'`                 |
 | Upload new tree                                  | *(handled by socketio-file-upload)* |
 | Retrieve available tree families                 | `'retrieve-available-trees'`        |
@@ -81,20 +79,6 @@ This file intents to cover the entire description of the `htest-server` API
 }
 ```
 
-### Test procedures library `http` `GET` `/test-procedures-library`
-> Retrieve test procedures web page
-```js
-{
-  protocol: 'http', method: 'GET', path: '/test-procedures-library',
-  input: {}, // no input parameter
-  output: {
-    ifSuccess: {
-      encoding: 'text/html', statusCode: 200,
-    },
-  },
-}
-```
-
 ### Machines tests `http` `GET` `/machines-tests`
 > Retrieve machines tests web page
 ```js
@@ -110,7 +94,7 @@ This file intents to cover the entire description of the `htest-server` API
 ```
 
 ### User has loaded a web page `socket.io` `'connection'`
-> Automatic and mandatory event which makes the server listening to `/index`, `/test-trees-library`, `/test-procedures-library` and `/machines-tests` socket.io events
+> Automatic and mandatory event which makes the server listening to `/index`, `/test-trees-library`, and `/machines-tests` socket.io events
 ```js
 {
   protocol: 'socket.io', event: 'connection',
@@ -124,16 +108,6 @@ This file intents to cover the entire description of the `htest-server` API
 ```js
 {
   protocol: 'socket.io', event: '/test-trees-library',
-  input: {}, // no input parameter
-  output: {}, // no output
-}
-```
-
-### User has loaded test procedures library web page `socket.io` `'/test-procedures-library'`
-> Event emited after `connection`, makes (theoretically) the server listening to the test procedures library specific events
-```js
-{
-  protocol: 'socket.io', event: '/test-procedures-library',
   input: {}, // no input parameter
   output: {}, // no output
 }
