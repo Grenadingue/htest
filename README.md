@@ -1,7 +1,7 @@
 # htest
 `htest = hardware tester`
 
-*__Warning__: this project is currently not usable in a production environment, it lacks a major part of its [development](#current-state)*
+*__/!\ Warning__: this project is currently not usable in a production environment, it lacks a major part of its [development](#current-state)*
 
 ## Description
 An hardware tester assistant, build on the top of a web server, designed for [Ordissimo](http://www.ordissimo.eu/en/about/change-mind)
