@@ -11,9 +11,9 @@ An hardware tester assistant, build on the top of a web server, designed for [Or
 * [Technical documentation](#technical-documentation)
   * [Install](#install)
   * [Update](#update)
-  * [Software packaging](#software-packaging)
   * [Development](#development)
     * [Build and launch](#build-and-launch)
+    * [Software packaging](#software-packaging)
     * [Current state](#current-state)
       * [Overview](#overview)
       * [API](#api)
@@ -56,12 +56,12 @@ See [`user guide`](htest-server/source/documentation/user_guide.md)
 * Restart the htest-server daemon `sudo systemctl restart htest-server`
 * Retrieve the daemon status `sudo systemctl status htest-server`
 
-### Software packaging
-See [`packaging instructions`](htest-server/README.md)
-
 ### Development
 #### Build and launch
 See [`build and launch instructions`](htest-server/source/README.md)
+
+#### Software packaging
+See [`packaging instructions`](htest-server/README.md)
 
 #### Current state
 ##### Overview
