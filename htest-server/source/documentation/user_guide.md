@@ -128,4 +128,110 @@ After a successfull submission, you will be redirected to the [`Tree family view
 The machines tests page is not implemented, you cannot use it right now.
 
 ## Test trees format
-Foobar
+Test trees are represented as json data.
+
+*Note: For a clearer idea of which items can be contained in a tree or node object, please refer to the [`tree grammar definition`](../models/treeGrammar.js).*
+
+### Tree format
+A tree object can be described by its meta data and its content. Its content is everything inside `root` (its root nodes). Its meta data are represented by the other fields.
+```js
+{
+  "name": "tree name",
+  "version": 1, // version id, must be a number
+  "root": [] // here come the nodes (root nodes), see `Nodes format` in next section
+}
+```
+
+### Nodes format
+A node object can take three different shapes, an abstract node, an instruction node and a pointer node. Every different shape has a slightly different meaning.
+
+#### Abstract node format
+An abstract node is supposed to represent pretty everything not entirely determnined, like a category.
+```js
+{
+  "name": "node name",
+  "exec": "PRIMARY", // "PRIMARY" -> node will be executed in any case, "SECONDARY" -> node will only be executed if called from a pointer node
+  "targetPlatforms": ["LAPTOP", "LAPTOP_TOUCH"], // flags to validate or not the accuracy of a node targeting an hardware platform
+  "branches": [] // here come the nodes (branch nodes)
+}
+```
+
+#### Instruction node format
+An instruction node is supposed to fact check something, by giving instructions then asking a question, and to propose a set of answers and their meaning, which respond to the checked fact.
+```js
+{
+  "name": "cursor move",
+  "instruction": "make the cursor moving", // thing to do to get a precise setup/environment
+  "question": "is the cursor able to move?", // question refering to things inside the previously defined setup
+  "answerPossibilities": ["yes", "no", "maybe"], // anwser possibilites to the previous question
+  "answerConsequences": [true, false, "/root/user input/pointing device/touchpad/cursor move"] // meaning of each question, as boolean or as a pointer to another node
+  "branches": []
+}
+```
+
+#### Pointer node format
+A pointer node is a kind of duplication of an other node, but only by its meaning. In fact a pointer looks like a postal address refering to a precise location. The pointer/address is not the location, but the location is refered by its postal address.
+```js
+{
+  "name": "test",
+  "target": "/root/network/lol" // pointer address
+}
+```
+
+### Full tree example
+```js
+{
+  "name": "super tree",
+  "version": 3,
+  "root": [
+    {
+      "name": "user input",
+      "branches": [
+        {
+          "name": "pointing device",
+          "branches": [
+            {
+              "name": "touchpad",
+              "targetPlatforms": ["LAPTOP", "LAPTOP_TOUCH"],
+              "branches": [
+                {
+                  "name": "cursor move",
+                  "instruction": "make the cursor moving",
+                  "question": "is the cursor able to move?",
+                  "answerPossibilities": ["yes", "no", "maybe"],
+                  "answerConsequences": [true, false, "/root/user input/pointing device/touchpad/cursor move"]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "network",
+      "branches": [
+        {
+          "name": "lol",
+          "exec": "PRIMARY",
+          "branches": []
+        },
+        {
+          "name": "ethernet",
+          "branches": [
+            {
+              "name": "foo"
+            },
+            {
+              "name": "bar"
+            },
+            {
+              "name": "test",
+              "target": "/root/network/lol"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
