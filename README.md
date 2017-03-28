@@ -6,8 +6,21 @@
 ## Description
 An hardware tester assistant, build on the top of a web server, designed for [Ordissimo](http://www.ordissimo.eu/en/about/change-mind)
 
+## Summary
+* [User documentation](#user-documentation)
+* [Technical documentation](#technical-documentation)
+  * [Install](#install)
+  * [Update](#update)
+  * [Software packaging](#software-packaging)
+  * [Development](#development)
+    * [Build and launch](#build-and-launch)
+    * [Current state](#current-state)
+      * [Overview](#overview)
+      * [API](#api)
+    * [Future](#future)
+
 ## User documentation
-See [`user guide`](htest-server/source/documentation/user_guide.md) *(in construction)*
+See [`user guide`](htest-server/source/documentation/user_guide.md)
 
 ## Technical documentation
 * __Compatibility__: Debian/Ubuntu and derivates
@@ -47,7 +60,7 @@ See [`user guide`](htest-server/source/documentation/user_guide.md) *(in constru
 See [`packaging instructions`](htest-server/README.md)
 
 ### Development
-#### How to build and launch in development mode?
+#### Build and launch
 See [`build and launch instructions`](htest-server/source/README.md)
 
 #### Current state
