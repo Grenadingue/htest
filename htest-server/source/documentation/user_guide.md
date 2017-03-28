@@ -112,11 +112,11 @@ Once we have selected a family and a tree inside of the family, we may want to d
 
 ![tree family update view download parent button](./images/update_tree_family_download_parent_button.png)
 
-Then download the tree as a `.json` file in your computer. *Wait, wtf am I supposed to do with that? See [`Test tree format documentation`](#test-trees-format)*
+Then download the tree as a `.json` file in your computer. *Wait, wtf am I supposed to do with that? See [`Tree format for an existing family`](#tree-format-for-an-existing-family)*
 
 ![tree family update view download parent](./images/update_tree_family_download_parent.png)
 
-Once we have passed the parent selection, the updater fields are now unlocked. Now we can upload a new tree in the family. The upload, validation and submission fields work the same way than the [`Create tree family` view](#add-new-tree-family). *For more details about the tree format, see [`Test tree format documentation`](#test-trees-format)*.
+Once we have passed the parent selection, the updater fields are now unlocked. Now we can upload a new tree in the family. The upload, validation and submission fields work the same way than the [`Create tree family` view](#add-new-tree-family). *For more details about the tree format, see [`Tree format for an existing family`](#tree-format-for-an-existing-family)*.
 
 ![update tree family](./images/update_tree_family.png)
 
@@ -229,6 +229,145 @@ A pointer node is a kind of duplication of an other node, but only by its meanin
               "target": "/root/network/lol"
             }
           ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+### Tree format for an existing family
+You can assume that everything explained previously in the [Tree format section](#tree-format) is still valid. We will only add some rules on the top of that.
+
+#### Retrieved tree example
+*Note: This tree is almost the same as the one given in [example](#full-tree-example) but may differ a bit. For infomation only.*
+```js
+{
+  "_id": "58d93ec0d6915e437e5eaf11",
+  "familyId": "58d93ec0d6915e437e5eaf10",
+  "version": 3,
+  "name": "super tree",
+  "root": [
+    {
+      "_id": "58d93ec0d6915e437e5eaf12",
+      "name": "user input",
+      "branches": [
+        {
+          "_id": "58d93ec0d6915e437e5eaf13",
+          "name": "pointing device",
+          "branches": [
+            {
+              "_id": "58d93ec0d6915e437e5eaf14",
+              "name": "touchpad",
+              "branches": [
+                {
+                  "_id": "58d93ec0d6915e437e5eaf15",
+                  "question": "is the cursor able to move?",
+                  "instruction": "make the cursor moving",
+                  "name": "cursor move",
+                  "answerConsequences": [
+                    true,
+                    false
+                  ],
+                  "answerPossibilities": [
+                    "yes",
+                    "no"
+                  ]
+                }
+              ],
+              "targetPlatforms": [
+                "LAPTOP",
+                "LAPTOP_TOUCH"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_id": "58d93ec0d6915e437e5eaf18",
+      "name": "42",
+      "branches": [
+        {
+          "_id": "58d93ec0d6915e437e5eaf19",
+          "exec": "PRIMARY",
+          "name": "connectivity, stability and data corruption"
+        },
+        {
+          "_id": "58d93ec0d6915e437e5eaf1a",
+          "name": "ethernet",
+          "branches": [
+            {
+              "_id": "58d93ec0d6915e437e5eaf1b",
+              "name": "foo"
+            },
+            {
+              "_id": "58d93ec0d6915e437e5eaf1c",
+              "name": "bar"
+            },
+            {
+              "_id": "58d93ec0d6915e437e5eaf1d",
+              "target": "network/connectivity, stability and data corruption",
+              "name": "connectivity, stability and data corruption"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+#### Refer to existing nodes
+Each previous time, we filled the `tree.root` and `node.branches` arrays with new nodes, defined directly in the array. This time, for each tree added in an existing family, you can refer to existing nodes contained in the same family. For that we will use the `_id` field.
+
+First, during the []() steps, download an existing tree. In the downloaded document you will find that every object contain its database `_id`.
+
+To use a reference to an existing node, simply create a new node with this format.
+```js
+{
+  "name": "existing name 2", // the name content does not matter
+  "_id": "58d29821d1441e049e35cff4" // existing node in another tree
+}
+```
+
+Also, note that you cannot add or update items in an existing node. This would be invalid.
+```js
+{
+  "name": "existing name 2", // the name content does not matter
+  "exec": "PRIMARY", // invalid
+  "_id": "58d29821d1441e049e35cff4", // existing node in another tree
+  "branches": [{ "name": "foo" }] // invalid
+}
+```
+
+#### New tree in existing family example
+```js
+{
+  "name": "super treeeee 2",
+  "root": [
+    {
+      "name": "existing name 1",
+      "_id": "58d29821d1441e049e35cff0"
+    },
+    {
+      "name": "new node 84",
+      "branches": [
+        {
+          "name": "NEW connectivity, stability and data corruption",
+          "exec": "PRIMARY",
+          "branches": []
+        },
+        {
+          "name": "ouh ouh ah ah"
+        },
+        {
+          "name": "existing name 2",
+          "_id": "58d29821d1441e049e35cff4"
+        },
+        {
+          "name": "existing name 2",
+          "_id": "58d29821d1441e049e35cff4"
         }
       ]
     }
