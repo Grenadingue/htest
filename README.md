@@ -1,10 +1,10 @@
 # htest
 `htest = hardware tester`
 
+*__Warning__: this project is currently not usable in a production environment, it lacks a major part of its [development](#current-state)*
+
 ## Description
 An hardware tester assistant, build on the top of a web server, designed for [Ordissimo](http://www.ordissimo.eu/en/about/change-mind)
-
-*Warning: this project is currently not usable in a production environment, it lacks a major part of its development, the tests execution*
 
 ## User documentation
 See [`user guide`](htest-server/source/documentation/user_guide.md) *(in construction)*
@@ -18,13 +18,19 @@ See [`user guide`](htest-server/source/documentation/user_guide.md) *(in constru
 * Select and download the last `.deb` available
 * Install the package `sudo dpkg -i htest-server_X.X_all.deb` on the target machine
 * Edit `/etc/htest-server/base.config.json` for your needs
-  * `webServer`
-    * `port` => server listening port
-    * `hostname` => server listening hostname (the server will deny any connection attempt with any other hostname)
-  * `dataBase` => mongoDB server connection url
-  * `fileSystem` (the server creates the directories if they do not exist)
-    * `uploadDirectory` => server upload directory (clients to server)
-    * `downloadDirectory` => server download directory (server to clients)
+```js
+{
+  "webServer": {
+    "port": 8080, // server listening port
+    "hostname": "127.0.0.1" // server listening hostname (the server will deny any connection attempt with any other hostname)
+  },
+  "dataBase": "mongodb://username:password@host:port/database_name", // mongoDB server connection url
+  "fileSystem": { // (the server creates the directories if they do not exist)
+    "uploadDirectory": "/tmp/htest-server/uploads", // server upload directory (clients to server)
+    "downloadDirectory": "/tmp/htest-server/downloads" // server download directory (server to clients)
+  }
+}
+```
 * Start the htest-server daemon `sudo systemctl start htest-server`
 * Retrieve the daemon status `sudo systemctl status htest-server`
 
