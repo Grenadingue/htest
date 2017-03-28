@@ -92,7 +92,37 @@ A click on the `View` button will give you access to a raw view of the tree's da
 A click on the `Delete` button will delete the desired tree. Be careful there is no confirmation message before deletion!
 
 #### Tree family update view
-Bar
+Here we face the tree family update view. This view goal is to let you add a new tree inside an existing family.
+
+![first tree family update view](./images/tree_family_update_view.png)
+
+We can break this view into two main components, the parent selector (`Select tree family`) and the updater (`Update tree family`).
+
+![tree family update view main components](./images/update_tree_family_main_components.png)
+
+The selection of a parent family and its version is mandatory to unlock the `Update tree family` fields. Lets select the tree family we will use as a parent.
+
+![tree family update view parent family selector](./images/update_tree_family_select_parent_family.png)
+
+Then we select a tree version. Note that even if the parent tree version selection is mandatory, it only gives you an access to download the selected tree. It does not impact how the selected tree version will be linked to the new added one.
+
+![tree family update view parent tree selector](./images/update_tree_family_select_parent_tree.png)
+
+Once we have selected a family and a tree inside of the family, we may want to download the selected tree. For that, just click the `Download` button.
+
+![tree family update view download parent button](./images/update_tree_family_download_parent_button.png)
+
+Then download the tree as a `.json` file in your computer. *Wait, wtf am I supposed to do with that? See [`Test tree format documentation`](#test-trees-format)*
+
+![tree family update view download parent](./images/update_tree_family_download_parent.png)
+
+Once we have passed the parent selection, the updater fields are now unlocked. Now we can upload a new tree in the family. The upload, validation and submission fields work the same way than the [`Create tree family` view](#add-new-tree-family). *For more details about the tree format, see [`Test tree format documentation`](#test-trees-format)*.
+
+![update tree family](./images/update_tree_family.png)
+
+After a successfull submission, you will be redirected to the [`Tree family view`](#tree-family-view), were you can see the newly added list appearing in the list.
+
+![tree family view with second tree](./images/first_tree_family_view_with_second_tree.png)
 
 ### Machines tests
 The machines tests page is not implemented, you cannot use it right now.
