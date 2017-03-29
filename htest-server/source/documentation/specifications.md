@@ -4,6 +4,18 @@
 *__Note3__: This is a kind of draft, more or less; I primarly use it to put down what is in my head*
 *__Note4__: You can read this document as if it were written in chronological order, it is*
 
+## Summary
+* [Project's logical blocks](#projects-logical-blocks)
+  * [Definition](#definition)
+  * [Block's roles](#blocks-roles)
+* [Server repository architecture](#server-repository-architecture)
+* [WBS - Work Breakdown Structure](#wbs---work-breakdown-structure)
+* [Database](#database)
+* [API - Application Programming Interface](#api---application-programming-interface)
+* [Local operations to project's functionnalities](#local-operations-to-projects-functionnalities)
+* [Sortir la tête du code](#sortir-la-tete-du-code)
+* [Cut off the exceding](#cut-off-the-exceding)
+
 ## Project's logical blocks
 ### Definition
 ```
@@ -209,7 +221,7 @@ On va définir les routes nécessaires au bon fonctionnement des fonctionnalité
    `--- parametre 3: type, nom (ex: string, 'foobaz')
 ```
 
-Voir `API.md` et `API_example.md`
+Voir [`API.md`](./API.md) et [`API_example.md`](./API_example.md)
 
 ## Local operations to project's functionnalities
 ```
