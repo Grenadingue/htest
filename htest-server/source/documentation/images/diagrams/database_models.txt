@@ -1,0 +1,15 @@
+[TreeFamily|name: string;trees: Tree array;references: array of arrays of cross references per tree]
+[Tree|family id: TreeFamily reference;name: string;version: number;root nodes: array of AbstractNode]
+[AbstractNode|name: string;exec: string;target platforms: array of strings;branches nodes: array of AbstractNode;discriminator key: node type name]
+[ProcedureNode|instruction: string;question: string;answer possibilities: array of strings;answer consequences array of AnswerConsequence;branches nodes: array of AbstractNode]
+[PointerNode|name: string;target path: string]
+[AnswerConsequence|answer validity: boolean;answer consequence target: string]
+
+[TreeFamily]1->1..*[Tree]
+[Tree]1->0..*[AbstractNode]
+[Tree]1->0..*[ProcedureNode]
+[ProcedureNode]1->1..*[AnswerConsequence]
+[Tree]1->0..*[PointerNode]
+[AbstractNode]^-[ProcedureNode]
+[AbstractNode]^-[PointerNode]
+

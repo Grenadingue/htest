@@ -15,6 +15,7 @@
 * [Local operations to project's functionnalities](#local-operations-to-projects-functionnalities)
 * [Sortir la tête du code](#sortir-la-tête-du-code)
 * [Cut off the exceding](#cut-off-the-exceding)
+* [Last database schema](#last-database-schema)
 
 ## Project's logical blocks
 ### Definition
@@ -323,3 +324,7 @@ Voir [`API.md`](./API.md) et [`API_example.md`](./API_example.md)
    `--- I did not plan to redo it, but if you want to implement the last GUI
         parts, you may consider using a framework
 ```
+
+## Last database schema
+
+![last database schema](./images/diagrams/database_models.png)
