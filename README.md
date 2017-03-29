@@ -66,9 +66,11 @@ See [`packaging instructions`](htest-server/README.md)
 
 #### Current state
 ##### Overview
-Here is a diagram of the current implementation state
+Here is a diagram of the current implementation state. You can differenciate three different applicative layers, the frontend, the API and the backend. On each different layer you can find three redundant components, the dashboard, the test trees library and the machines tests. These three components represent the project's functionnalities from the eye of final user, in other words, the three different parts of the graphical interface the user will interact with. You can look at the grey note to get the colors representation of the different items.
 
 ![implementation overview](./htest-server/source/documentation/images/diagrams/implementation_overview.png)
+
+For more details about the current implementation look at the [`project's specifications`](#specifications).
 
 ##### Specifications
 See [`project's specifications`](./htest-server/source/documentation/specifications.md). Be warned, it's a french/english ratatouille
