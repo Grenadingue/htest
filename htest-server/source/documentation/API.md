@@ -124,17 +124,17 @@ This file intends to cover the entire description of the `htest-server` API
 ```
 
 ### Upload new tree `socketio-file-upload`
-> Send a file selected by the user, from the file-system, through `socketio-file-upload`, overlapping `socket.io`
+> Send a file selected by the user, from the file-system, through `socketio-file-upload`, overlapping `socket.io`. If you are really insterested by this part I suggest you to take a ride in the [`socketio-file-upload` github repository](https://github.com/vote539/socketio-file-upload)
 ```js
 {
   protocol: 'socketio-file-upload',
-  event: undefined, input: {}, // no input parameter
-  outputEvent: undefined, output: {}, // no output
+  event: undefined, input: {},
+  outputEvent: undefined, output: {},
 }
 ```
 
 ### Retrieve available tree families `socket.io` `'retrieve-available-trees'`
-> Foo
+> Retrieve a list of available tree families
 ```js
 {
   protocol: 'socket.io',
@@ -153,7 +153,7 @@ This file intends to cover the entire description of the `htest-server` API
 ```
 
 ### Validate new tree family name `socket.io` `'validate-new-tree-family-name'`
-> Foo
+> Ask the server if a family name is available, if it does not already exists
 ```js
 {
   protocol: 'socket.io',
@@ -174,7 +174,7 @@ This file intends to cover the entire description of the `htest-server` API
 ```
 
 ### Validate new tree family content `socket.io` `'validate-new-tree-data'`
-> Foo
+> Ask the server to check that the last sent file associated with the given client id is valid. More precisely, the server will check that tree's data are usable without error
 ```js
 {
   protocol: 'socket.io',
@@ -194,7 +194,7 @@ This file intends to cover the entire description of the `htest-server` API
 ```
 
 ### Create new tree family `socket.io` `'submit-new-tree'`
-> Foo
+> Redo `'validate-new-tree-family-name'` and `'validate-new-tree-data'` operations and add the new tree family to the database if the previous operations are still successfull.
 ```js
 {
   protocol: 'socket.io',
@@ -215,7 +215,7 @@ This file intends to cover the entire description of the `htest-server` API
 ```
 
 ### Delete whole family from family id `socket.io` `'delete-trees-from-family-id'`
-> Foo
+> Delete a whole trees family, if possible.
 ```js
 {
   protocol: 'socket.io',
@@ -235,7 +235,7 @@ This file intends to cover the entire description of the `htest-server` API
 ```
 
 ### Retrieve available trees in a family `socket.io` `'retrieve-trees-from-family-id'`
-> Foo
+> Retrieve some meta data about a trees family and a list of available trees inside the family
 ```js
 {
   protocol: 'socket.io',
@@ -258,7 +258,7 @@ This file intends to cover the entire description of the `htest-server` API
 ```
 
 ### Validate new tree content in a given family `socket.io` `'validate-new-tree-version-data'`
-> Foo
+> Ask the server to check that the last sent file associated with the given client id is valid. More precisely, the server will check that tree's data, inside the given family, are usable without error
 ```js
 {
   protocol: 'socket.io',
@@ -280,7 +280,7 @@ This file intends to cover the entire description of the `htest-server` API
 ```
 
 ### Create new tree version in a given family `socket.io` `'submit-new-tree-version'`
-> Foo
+> Redo `'validate-new-tree-version-data'` operation and add the new tree, inside the given family, into the database if the previous operation is still successfull.
 ```js
 {
   protocol: 'socket.io',
@@ -302,7 +302,7 @@ This file intends to cover the entire description of the `htest-server` API
 ```
 
 ### Delete tree from id `socket.io` `'delete-tree-from-id'`
-> Foo
+> Delete a whole tree, if possible.
 ```js
 {
   protocol: 'socket.io',
@@ -322,7 +322,7 @@ This file intends to cover the entire description of the `htest-server` API
 ```
 
 ### Retrieve tree content from id `socket.io` `'retrieve-tree-from-id'`
-> Foo
+> Retrieve raw tree meta data and content
 ```js
 {
   protocol: 'socket.io',
