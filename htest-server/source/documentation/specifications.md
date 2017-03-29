@@ -16,6 +16,7 @@
 * [Sortir la tête du code](#sortir-la-tête-du-code)
 * [Cut off the exceding](#cut-off-the-exceding)
 * [Last database schema](#last-database-schema)
+* [Lexical validation](#lexical-validation)
 
 ## Project's logical blocks
 ### Definition
