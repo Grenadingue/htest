@@ -6,9 +6,8 @@ This file intends to cover the entire description of the `htest-server` API
 
 *__Note__: See `[API_example.md](./API_example.md)` for details about API documentation*
 
-## Routes
-### Summary
-#### `http` routes
+## Summary
+### `http` routes
 | Name                    | Method | Path                       |
 |-------------------------|--------|----------------------------|
 | [Web server root](#web-server-root-http-get-) | `GET` | `/` |
@@ -16,7 +15,7 @@ This file intends to cover the entire description of the `htest-server` API
 | [Test trees library](#test-trees-library-http-get-test-trees-library) | `GET` | `/test-trees-library` |
 | [Machines tests](#machines-tests-http-get-machines-tests) | `GET` | `/machines-tests` |
 
-#### `socket.io` events
+### `socket.io` events
 *__Note__: From client(s) to server*  
 *__Note2__: Server answers to client are described with client's events*
 
@@ -25,6 +24,10 @@ This file intends to cover the entire description of the `htest-server` API
 | [User has loaded a web page](#user-has-loaded-a-web-page-socketio-connection) | `'connection'` |
 | [User has loaded test trees library web page](#user-has-loaded-test-trees-library-web-page-socketio-test-trees-library) | `'/test-trees-library'` |
 | [User has loaded machines tests web page](#user-has-loaded-machines-tests-web-page-socketio-machines-tests) | `'/machines-tests'` |
+
+
+| Name                                             | Event                               |
+|--------------------------------------------------|-------------------------------------|
 | [Upload new tree](#upload-new-tree-socketio-file-upload) | *(handled by socketio-file-upload)* |
 | [Retrieve available tree families](#retrieve-available-tree-families-socketio-retrieve-available-trees) | `'retrieve-available-trees'` |
 | [Validate new tree family name](#validate-new-tree-family-name-socketio-validate-new-tree-family-name) | `'validate-new-tree-family-name'` |
@@ -37,6 +40,7 @@ This file intends to cover the entire description of the `htest-server` API
 | [Delete tree from id](#delete-tree-from-id-socketio-delete-tree-from-id) | `'delete-tree-from-id'` |
 | [Retrieve tree content from id](#retrieve-tree-content-from-id-socketio-retrieve-tree-from-id) | `'retrieve-tree-from-id'` |
 
+## Routes
 ### Web server root `http` `GET` `/`
 > Redirects `/` to `/index`
 ```js
