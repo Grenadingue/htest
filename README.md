@@ -16,6 +16,7 @@ An hardware tester assistant, build on the top of a web server, designed for [Or
     * [Software packaging](#software-packaging)
     * [Current state](#current-state)
       * [Overview](#overview)
+      * [Specifications](#specifications)
       * [API](#api)
     * [Future](#future)
 
@@ -69,7 +70,8 @@ Here is a diagram of the current implementation state
 
 ![implementation overview](./htest-server/source/documentation/images/diagrams/implementation_overview.png)
 
-You can find the project's specifications [here](./htest-server/source/documentation/specifications.md). Be warned, it's a french/english ratatouille
+##### Specifications
+See [`project's specifications`](./htest-server/source/documentation/specifications.md). Be warned, it's a french/english ratatouille
 
 ##### API
 See [`application programming interface description`](htest-server/source/documentation/API.md)
