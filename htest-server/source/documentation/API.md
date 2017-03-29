@@ -4,7 +4,7 @@ Application Programming Interface
 ## Description
 This file intends to cover the entire description of the `htest-server` API
 
-*__Note__: See `[API_example.md](./API_example.md)` for details about API documentation*
+*__Note__: See [`API_example.md`](./API_example.md) for details about API documentation*
 
 ## Summary
 ### `http` routes
