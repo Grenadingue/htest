@@ -2,6 +2,7 @@
 *__Note__: Tree, trees, treees, everything may be tree*  
 *__Note2__: Sometimes it's written in french, sometimes in english; désolé*  
 *__Note3__: This is a kind of draft, more or less; I primarly use it to put down what is in my head*
+*__Note4__: You can read this document as if it were written in chronological order, it is*
 
 ## Project's logical blocks
 ### Definition
@@ -261,10 +262,10 @@ Voir `API.md` et `API_example.md`
    `--- pour l'instant on s'en fout
 ```
 
-## Next
+## Sortir la tête du code
 
 ```
-+ Il faut ensuite
++ Il faudrait
 |--+ documenter l'API
 |  |--+ grossièrement en ce qui concerne
 |  |  |--- le dashboard
@@ -280,4 +281,33 @@ Voir `API.md` et `API_example.md`
       |--- en local (sur arch)
       |--- en local (sur vm debian)
       `--- sur un des serveur de substantiel
+```
+
+## Cut off the exceding
+
+```
++ Exceding things
+|--+ XML format
+|  |--- this project has been implemented in Javascript, why using XML instead
+|  |    of JSON, it's native! And it's a clearer and easier format
+|  `--- let's use JSON
+|--+ SQL database
+|  |--- this project has been implemented in Javascript, and it seems to be a good
+|  |    idea to use JSON as inputs/outputs, why using an SQL relationnal database
+|  |    plus an ORM, while a MongoDB database is able to process our JSON data
+|  |    (trees) without needing to reinvent the wheel ?
+|  `--- let's use MongoDB + mongoose
+|--+ tests procedures library
+|  |--- a test procedure library would be a good idea if it was ALWAYS possible
+|  |    to generate linear procedures from trees, but due to possibly present
+|  |    conditional links inside a tree, a linear procedure is not always
+|  |    possible to generate
+|  `--- let's delete the tests procedures library, then say that we will
+|       directly execute trees by reading its content (like executing a .exe)
+`--+ web GUI implementation
+   |--- hmm let's be honest, this project has been the first time for me to
+   |    implement a web graphical user interface; I've done it, it works, but
+   |    it is plain Javascript, if you don't wanna cry you should not go see it
+   `--- I did not plan to redo it, but if you want to implement the last GUI
+        parts, you may consider using a framework
 ```
