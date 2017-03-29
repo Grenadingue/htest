@@ -79,4 +79,6 @@ See [`project's specifications`](./htest-server/source/documentation/specificati
 See [`application programming interface description`](htest-server/source/documentation/API.md)
 
 #### Future
-*Incoming...*
+See the [`todo list`](./htest-server/source/documentation/todo_list.pdf) for details about what's not done and what to do
+
+See also the missing [`lexical validation`](./htest-server/source/documentation/specifications.md#lexical-validation) description
