@@ -1,7 +1,7 @@
 # Specifications
 *__Note__: Tree, trees, treees, everything may be tree*  
 *__Note2__: Sometimes it's written in french, sometimes in english; désolé*  
-*__Note3__: This is a kind of draft, more or less; I primarly use it to put down what is in my head*
+*__Note3__: This is a kind of draft, more or less; I primarly use it to put down what is in my head*  
 *__Note4__: You can read this document as if it were written in chronological order, it is*
 
 ## Summary
@@ -327,4 +327,18 @@ Voir [`API.md`](./API.md) et [`API_example.md`](./API_example.md)
 
 ## Last database schema
 
+More details about the models and their use in [`../models/*`](../models)
+
 ![last database schema](./images/diagrams/database_models.png)
+
+## Lexical validation
+
+In the test trees library, while validating a brand new tree, some verifications has to be made. First we check that the input file contains valid JSON, then we check that the data respects a [`predefined grammar`](../models/treeGrammar.js). That's what is already done.
+
+What's not already done about that ? We must check that every single piece of data, like strings and numbers, has a valid content in its context. The context here covers the scope a tree family. This is what I call the lexical validation
+
+`PointerNode.target` and `AnswerConsequence.answerConsequence` may use a path to refer to the target content. Because of that, we may use every `name` object's fields as path's part. For that we need to check that every tree node has a unique path, and that the given paths exist
+
+Also, while adding a tree into an existing family, we can refer to existing nodes inside the family, so we must check that every given `_id` field already exists in the database and is contained in the current tree family
+
+Elsewhere, we may also wanna check the `exec` and `targetPlatforms` values to be sure that they are refeiring to valid definitions
