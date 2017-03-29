@@ -1,0 +1,32 @@
+[Dashboard Backend{bg:red}]
+[Test trees library Backend{bg:orange}]
+[Machines tests Backend{bg:red}]
+[Backend{bg:orange}]
+[Frontend (GUI) API{bg:green}]
+[Dashboard API{bg:red}]
+[Test trees library API{bg:green}]
+[Machines tests API{bg:orange}]
+[API{bg:orange}]
+[Dashboard Frontend{bg:orange}]
+[Test trees library Frontend{bg:green}]
+[Machines tests Frontend{bg:orange}]
+[Frontend{bg:orange}]
+
+[Dashboard Backend]++-[Backend]
+[Test trees library Backend]++-[Backend]
+[Machines tests Backend]++-[Backend]
+
+[Frontend (GUI) API]++-[API]
+[Dashboard API]++-[API]
+[Test trees library API]++-[API]
+[Machines tests API]++-[API]
+
+[Dashboard Frontend]++-[Frontend]
+[Test trees library Frontend]++-[Frontend]
+[Machines tests Frontend]++-[Frontend]
+
+[API]->use[Backend]
+[Frontend]->use[API]
+
+[note: green = implemented; orange = partially implemented; red = not implemented]
+
