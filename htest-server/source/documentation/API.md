@@ -4,17 +4,17 @@ Application Programming Interface
 ## Description
 This file intends to cover the entire description of the `htest-server` API
 
-*__Note__: See `API_example.md` for details about API documentation*
+*__Note__: See `[API_example.md](./API_example.md)` for details about API documentation*
 
 ## Routes
 ### Summary
 #### `http` routes
 | Name                    | Method | Path                       |
 |-------------------------|--------|----------------------------|
-| Web server root         | `GET`  | `/`                        |
-| Dashboard               | `GET`  | `/index`                   |
-| Test trees library      | `GET`  | `/test-trees-library`      |
-| Machines tests          | `GET`  | `/machines-tests`          |
+| [Web server root](#web-server-root-http-get-) | `GET` | `/` |
+| [Dashboard](#dashboard-http-get-index) | `GET` | `/index` |
+| [Test trees library](#test-trees-library-http-get-test-trees-library) | `GET` | `/test-trees-library` |
+| [Machines tests](#machines-tests-http-get-machines-tests) | `GET` | `/machines-tests` |
 
 #### `socket.io` events
 *__Note__: From client(s) to server*  
@@ -22,20 +22,20 @@ This file intends to cover the entire description of the `htest-server` API
 
 | Name                                             | Event                               |
 |--------------------------------------------------|-------------------------------------|
-| User has loaded a web page                       | `'connection'`                      |
-| User has loaded test trees library web page      | `'/test-trees-library'`             |
-| User has loaded machines tests web page          | `'/machines-tests'`                 |
-| Upload new tree                                  | *(handled by socketio-file-upload)* |
-| Retrieve available tree families                 | `'retrieve-available-trees'`        |
-| Validate new tree family name                    | `'validate-new-tree-family-name'`   |
-| Validate new tree family content                 | `'validate-new-tree-data'`          |
-| Create new tree family                           | `'submit-new-tree'`                 |
-| Delete whole family from family id               | `'delete-trees-from-family-id'`     |
-| Retrieve available trees in a family             | `'retrieve-trees-from-family-id'`   |
-| Validate new tree content in a given family      | `'validate-new-tree-version-data'`  |
-| Create new tree version in a given family        | `'submit-new-tree-version'`         |
-| Delete tree from id                              | `'delete-tree-from-id'`             |
-| Retrieve tree content from id                    | `'retrieve-tree-from-id'`           |
+| [User has loaded a web page](#user-has-loaded-a-web-page-socketio-connection) | `'connection'` |
+| [User has loaded test trees library web page](#user-has-loaded-test-trees-library-web-page-socketio-test-trees-library) | `'/test-trees-library'` |
+| [User has loaded machines tests web page](#user-has-loaded-machines-tests-web-page-socketio-machines-tests) | `'/machines-tests'` |
+| [Upload new tree](#upload-new-tree-socketio-file-upload) | *(handled by socketio-file-upload)* |
+| [Retrieve available tree families](#retrieve-available-tree-families-socketio-retrieve-available-trees) | `'retrieve-available-trees'` |
+| [Validate new tree family name](#validate-new-tree-family-name-socketio-validate-new-tree-family-name) | `'validate-new-tree-family-name'` |
+| [Validate new tree family content](#validate-new-tree-family-content-socketio-validate-new-tree-data) | `'validate-new-tree-data'` |
+| [Create new tree family](#create-new-tree-family-socketio-submit-new-tree) | `'submit-new-tree'` |
+| [Delete whole family from family id](#delete-whole-family-from-family-id-socketio-delete-trees-from-family-id) | `'delete-trees-from-family-id'` |
+| [Retrieve available trees in a family](#retrieve-available-trees-in-a-family-socketio-retrieve-trees-from-family-id) | `'retrieve-trees-from-family-id'` |
+| [Validate new tree content in a given family](#validate-new-tree-content-in-a-given-family-socketio-validate-new-tree-version-data) | `'validate-new-tree-version-data'` |
+| [Create new tree version in a given family](#create-new-tree-version-in-a-given-family-socketio-submit-new-tree-version) | `'submit-new-tree-version'` |
+| [Delete tree from id](#delete-tree-from-id-socketio-delete-tree-from-id) | `'delete-tree-from-id'` |
+| [Retrieve tree content from id](#retrieve-tree-content-from-id-socketio-retrieve-tree-from-id) | `'retrieve-tree-from-id'` |
 
 ### Web server root `http` `GET` `/`
 > Redirects `/` to `/index`
