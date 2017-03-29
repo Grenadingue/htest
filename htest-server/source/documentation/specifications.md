@@ -13,7 +13,7 @@
 * [Database](#database)
 * [API - Application Programming Interface](#api---application-programming-interface)
 * [Local operations to project's functionnalities](#local-operations-to-projects-functionnalities)
-* [Sortir la tête du code](#sortir-la-tete-du-code)
+* [Sortir la tête du code](#sortir-la-tête-du-code)
 * [Cut off the exceding](#cut-off-the-exceding)
 
 ## Project's logical blocks
